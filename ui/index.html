@@ -34,15 +34,36 @@
     <script src="js/vendor/modernizr-2.6.2.min.js"></script>
   </head>
   <body>
-    <script type="text/x-handlebars" data-template-name="dprm">
-      <header>
-        <h1>DPRM</h1>
-        <p id="tagline">Discover music with your friends.</p>
-      </header>
+    <script type="text/x-handlebars" data-template-name="index">
+      <section id="cover">
+        <header>
+          <h1>DPRM</h1>
+        </header>
 
-      <section id="main">
-        {{outlet}}
-      </section>
+        <section class="cover-enter">
+          <button>Join</button>
+          <button>Create Room</button>
+        </section>
+
+        <section class="cover-explain">
+          Discover music with your friends.
+        </section>
+      </div>
+    </section>
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="room">
+    <section id="room">
+      {{outlet}}
+    </section>
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="room/index">
+
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="room/add">
+
     </script>
 
     <script src="js/vendor/jquery-1.9.1.js"></script>
