@@ -3,7 +3,10 @@
 
 # TEAM
 
-    <name> -- <role> -- <twitter>
+    Bruce Spang - Backend - @brucespang
+    Jez Ng -- Backend -- @int3
+    Michael James -- Server Ops, Frontend
+    Jonathan Wilde -- Frontend, Design -- @hellojwilde
 
 # THANKS
 
@@ -12,4 +15,5 @@
 # TECHNOLOGY COLOPHON
 
     HTML5, CSS3
-    jQuery, Modernizr
+    Zepto, Modernizr
+    Ember, Handlebars
