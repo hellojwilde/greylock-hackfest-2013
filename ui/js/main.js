@@ -15,6 +15,13 @@ Dprm.Router.map(function () {
   /* TODO <jwilde>: add more routes for favorites and the like */
 });
 
+/* Views */
+Dprm.SongView = Ember.View.extend({
+  templateName: "view-song"
+});
+
 /* Models */
+
+
 
 /* Controllers */

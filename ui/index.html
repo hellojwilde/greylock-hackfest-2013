@@ -35,19 +35,18 @@
   </head>
   <body>
     <script type="text/x-handlebars" data-template-name="index">
-      <section id="cover">
-        <header>
-          <h1>DPRM</h1>
-        </header>
+    <section id="cover">
+      <header>
+        <h1>DPRM</h1>
+      </header>
 
-        <section class="cover-enter">
-          <button>Join</button>
-          <button>Create Room</button>
-        </section>
+      <div class="cover-enter">
+        <button>Join</button>
+        <button>Create Room</button>
+      </div>
 
-        <section class="cover-explain">
-          Discover music with your friends.
-        </section>
+      <div class="cover-explain">
+        Discover music with your friends.
       </div>
     </section>
     </script>
@@ -59,11 +58,48 @@
     </script>
 
     <script type="text/x-handlebars" data-template-name="room/index">
+    <div id="now-playing">
+      {{view Dprm.SongView valueBinding="nowPlaying"}}
+    </div>
 
+    <section id="options">
+      <ul id="options-queue">
+        {{#each controller itemController="option"}}
+        <li class="option">
+          <div class="option-voting">
+            <button class="option-up" {{action "voteUp"}}>Up</button>
+            <button class="option-down" {{action "voteDown"}}>Down</button>
+
+            <p class="option-votes">{{votes}}</p>
+          </div>
+
+          {{view Dprm.SongView valueBinding="song"}}
+        </li>
+        {{/each}}
+      </ul>
+
+      <footer>
+        <button>Add Song</button>
+      </footer>
+    </section>
     </script>
 
     <script type="text/x-handlebars" data-template-name="room/add">
+    <header>
 
+    </header>
+
+    <section id="results">
+
+    </section>
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="view-song">
+    <div class="song">
+      <img src="{{albumCover}}" alt="{{albumName}}"/>
+      <p class="name">{{name}}</p>
+      <p class="song-albumname">From {{albumName}}</p>
+    </div>
     </script>
 
     <script src="js/vendor/jquery-1.9.1.js"></script>
