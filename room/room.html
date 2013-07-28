@@ -18,7 +18,7 @@
   </section>
 
   <section id="next" ng-controller="NextCtrl">
-    <ul id="queue" ng-hide="isSearching" ng-controller="NextQueueCtrl">
+    <ul id="queue" ng-hide="isSearching" ng-controller="QueueController">
       <li ng-repeat="queued in queue()"><song bound-song="queued"/></li>
     </ul>
 
