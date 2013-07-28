@@ -1,94 +1,109 @@
-var Songs = function(){
-  var peer = null;
-  var client = null;
-  var rcvmsg = function (data) {
+var Songs = {
+  _observers: [],
+  _peer: null,
+  _client: null,
+
+  songs: {},
+
+  init: function () {
+    var urlArr = window.location.toString().split('/');
+    var id = urlArr[urlArr.length-1];
+    id = id.replace('.','-');
+
+    var cfg = {
+      host: 'ec2-54-215-180-78.us-west-1.compute.amazonaws.com',
+      port: 9000
+    };
+
+    this._peer = new Peer(id, cfg);
+    console.log('connecting: ', this._peer);
+
+    this._peer.on('error', function(err) {
+      console.log(err);
+      this._peer = new Peer(null, cfg);
+
+      console.log('that failed: now to ', this._peer);
+      this._peer.on('open', function(){
+        this._client = new Raft(this._peer, this);
+        console.log(this._client.id, id);
+        this._client.join(id);
+
+        // XXX test code
+        this._client.send({action:"upvote",uuid:"9070-8909"});
+      }.bind(this));
+    });
+
+    this._peer.on('open', function(){
+      this._client = new Raft(this._peer, this._handleRaftMessage.bind(this),
+                              Raft.states.leader);
+      console.log(this._client.id, id);
+      this._client.join(id);
+    }.bind(this));
+
+    return this;
+  },
+
+  addObserver: function (aObserver) {
+    this._observers.push(aObserver);
+  },
+
+  fireObserver: function (aMessage, aData) {
+    this._observers.forEach((aObserver) => aObserver.observe(aMessage, aData));
+  },
+
+  add: function () {
+    this._client.send({
+      action: 'add',
+      obj: obj
+    });
+  },
+
+  upvote: function (uuid) {
+    this._sendMessage("upvote", uuid);
+  },
+
+  downvote: function (uuid) {
+    this._sendMessage("downvote", uuid);
+  },
+
+  play: function (uuid) {
+    this._sendMessage("play", uuid);
+  },
+
+  _sendMesssage: function (action, uuid) {
+    this._client.send({
+      action: action,
+      uuid: uuid
+    });
+  },
+
+  _handleRaftMessage: function (data) {
     console.log('data: ', data);
-    if(data.action){
+    if (data.action){
       switch(data.action){
         case "add":
           console.log("adding");
-          retVal.add(data.obj);
+          this.songs[data.obj.uuid] = data.obj;
+          this.fireObserver(data.action, data.obj);
           break;
         case "upvote":
           console.log("upvoting");
-          retVal.upvote(data.uuid);
+          this.songs[data.uuid].votes++;
+          this.fireObserver(data.action, data.uuid);
           break;
         case "downvote":
           console.log("downvoting");
-          retVal.downvote(data.uuid);
+          this.songs[data.uuid].votes--;
+          this.fireObserver(data.action, data.uuid);
           break;
         case "play":
           console.log("playing");
-          retVal.play(data.uuid);
+          this.fireObserver(data.action, data.uuid);
           break;
         default:
-          console.warn("unknown action");
+          console.warn("unknown action: " + data.action);
           break;
       }
     }
-  };
-
-  var retVal = {
-    _songs: {},
-
-    init: function () {
-        var urlArr = window.location.toString().split('/');
-        var id = urlArr[urlArr.length-1];
-        id = id.replace(/[^A-Za-z\-]/g,'');
-        var cfg = {
-          host: 'ec2-54-215-180-78.us-west-1.compute.amazonaws.com',
-          port: 9000
-        };
-        peer = new Peer(id, cfg);
-        console.log('connecting: ',peer);
-        peer.on('error', function(err) {
-          console.log(err);
-          peer = new Peer(null, cfg);
-          console.log('that failed: now to ', peer);
-          peer.on('open', function(){
-            client = new Raft(peer, rcvmsg);
-            console.log(client.id, id);
-            client.join(id);
-            client.send({action:"upvote",uuid:"9070-8909"});
-          });
-        });
-        peer.on('open', function(){
-          client = new Raft(peer, rcvmsg, Raft.states.leader);
-          console.log(client.id, id);
-          client.join(id);
-        });
-      return this;
-    },
-
-    add: function (obj) {
-
-    },
-
-    upvote: function (uuid) {
-      console.log('uuid: ', uuid);
-    },
-
-    downvote: function (uuid) {
-
-    },
-
-    play: function (uuid) {
-
-    },
-
-    sendMessage: function(action, uuid){
-      client.send({
-        action:action,
-        uuid:uuid
-      });
-    },
-
-    addSong: function(obj){
-      client.send({
-        action: 'add',
-        obj:obj
-      });
-    }
-  };
-  return retVal;
-}();
+  }
+};
