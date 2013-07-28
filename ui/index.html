@@ -34,75 +34,29 @@
     <script src="js/vendor/modernizr-2.6.2.min.js"></script>
   </head>
   <body>
-    <script type="text/x-handlebars" data-template-name="index">
-    <section id="cover">
-      <header>
-        <h1>DPRM</h1>
-      </header>
-
-      <div class="cover-enter">
-        <button>Join</button>
-        <button>Create Room</button>
+    <h1 name='title'>
+      DPRM
+    <h1>
+    <h3 class='subtitle'>
+      The Democratic People's Republic of Music 
+    </h3>
+    <div class='explaination'>
+      <p>
+        Bacon ipsum dolor sit amet meatball tri-tip shoulder bresaola. T-bone pork loin ball tip pig drumstick. Prosciutto pork belly tongue doner. Cow chuck corned beef meatloaf, andouille meatball short loin ham hock pork chop beef shank pastrami salami strip steak tongue. Biltong shoulder leberkas, pork loin chuck prosciutto kielbasa chicken rump tongue pancetta pork ham bacon.
+      </p>
+    </div>
+    <hr>
+    <div class="room-form">
+      <input type="text" name="room" value="random value">
+      <div class="join-create-room">
+        <button type="button">Join a room</button>
+        <button type="button">Create a room</button>
       </div>
-
-      <div class="cover-explain">
-        Discover music with your friends.
-      </div>
-    </section>
-    </script>
-
-    <script type="text/x-handlebars" data-template-name="room">
-    <section id="room">
-      {{outlet}}
-    </section>
-    </script>
-
-    <script type="text/x-handlebars" data-template-name="room/index">
-    <div id="now-playing">
-      {{view Dprm.SongView valueBinding="nowPlaying"}}
     </div>
 
-    <ul id="queue">
-      {{#each controller}}
-      <li class="option">
-        {{view Dprm.SongView}}
-      </li>
-      {{/each}}
-    </ul>
-
-    <footer>
-      <button>Add Song</button>
-    </footer>
-    </script>
-
-    <script type="text/x-handlebars" data-template-name="room/add">
-    <header>
-
-    </header>
-
-    <section id="results">
-
-    </section>
-    </script>
-
-    <script type="text/x-handlebars" data-template-name="view-song">
-    <div class="song">
-      <div class="option-voting">
-            <button class="option-up" {{action "voteUp"}}>Up</button>
-            <button class="option-down" {{action "voteDown"}}>Down</button>
-            <p class="option-votes">{{votes}}</p>
-          </div>
-
-      <img src="{{albumCover}}" alt="{{albumName}}"/>
-      <p class="name">{{name}}</p>
-      <p class="song-albumname">From {{albumName}}</p>
-    </div>
-    </script>
+ 
 
     <script src="js/vendor/jquery-1.9.1.js"></script>
-    <script src="js/vendor/handlebars-1.0.0-rc.4.js"></script>
-    <script src="js/vendor/ember-1.0.0-rc.6.1.js"></script>
-    <script src="js/vendor/ember-data-0.13.js"></script>
     <script src="js/main.js"></script>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
