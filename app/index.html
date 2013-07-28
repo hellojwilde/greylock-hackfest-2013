@@ -16,24 +16,10 @@
     <link rel="apple-touch-icon-precomposed" href="img/touch/apple-touch-icon-57x57-precomposed.png">
     <link rel="shortcut icon" href="img/touch/apple-touch-icon.png">
 
-    <!-- Tile icon for Win8 (144x144 + tile color) -->
-    <!--
-    <meta name="msapplication-TileImage" content="img/touch/apple-touch-icon-144x144-precomposed.png">
-    <meta name="msapplication-TileColor" content="#222222">
-    -->
-
-    <!-- For iOS web apps. Delete if not needed. https://github.com/h5bp/mobile-boilerplate/issues/94 -->
-    <!--
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="">
-    -->
-
-    <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/main.css">
-    <script src="js/vendor/modernizr-2.6.2.min.js"></script>
   </head>
-  <body>
+  <body onload="loaded()">
+    <div id='intro'>
     <h1 name='title'>
       DPRM
     <h1>
@@ -47,17 +33,15 @@
     </div>
     <hr>
     <div class="room-form">
-      <input type="text" name="room" value="random value">
+      <input type="text" id="room" value="random value">
       <div class="join-create-room">
-        <button type="button">Join a room</button>
-        <button type="button">Create a room</button>
+        <button type="button" onclick="joinRoom()">Join a room</button>
+        <button type="button" onclick="createRoom()">Create a room</button>
       </div>
     </div>
+  </div>
 
- 
-
-    <script src="js/vendor/jquery-1.9.1.js"></script>
-    <script src="js/main.js"></script>
+    <script src="js/index.js"></script>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
     <!--<script>
