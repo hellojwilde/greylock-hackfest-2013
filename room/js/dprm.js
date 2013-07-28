@@ -38,7 +38,6 @@ function NextCtrl($scope, SongService) {
 function NextQueueCtrl($scope, SongService) {
   //get/send queue updates
   $scope.queue = function () {
-    // XXX pull from service
     return [];
   };
 }

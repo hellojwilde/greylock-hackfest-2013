@@ -31,7 +31,7 @@ var Songs = {
         // XXX test code
         this._client.send({action:"upvote",uuid:"9070-8909"});
       }.bind(this));
-    });
+    }.bind(this));
 
     this._peer.on('open', function(){
       this._client = new Raft(this._peer, this._handleRaftMessage.bind(this),
@@ -51,7 +51,8 @@ var Songs = {
     this._observers.forEach((aObserver) => aObserver.observe(aMessage, aData));
   },
 
-  add: function () {
+  add: function (obj) {
+    this.songs[obj.uuid] = obj;
     this._client.send({
       action: 'add',
       obj: obj
@@ -59,10 +60,14 @@ var Songs = {
   },
 
   upvote: function (uuid) {
+    this.songs[uuid].votes++;
+    this.songs[uuid].haveVoted = true;
     this._sendMessage("upvote", uuid);
   },
 
   downvote: function (uuid) {
+    this.songs[uuid].votes--;
+    this.songs[uuid].haveVoted = true;
     this._sendMessage("downvote", uuid);
   },
 
@@ -70,7 +75,7 @@ var Songs = {
     this._sendMessage("play", uuid);
   },
 
-  _sendMesssage: function (action, uuid) {
+  _sendMessage: function (action, uuid) {
     this._client.send({
       action: action,
       uuid: uuid

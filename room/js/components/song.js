@@ -5,15 +5,15 @@ dprm.directive('song', function () {
     scope: { song: "=boundSong", },
     controller: function ($scope, $element, SongService) {
       $scope.upvote = function (aId) {
-        // XXX bump votes up
+        SongService.upvote(aSong)
       };
 
-      $scope.downvote = function (aId) {
-        // XXX bump votes down
+      $scope.downvote = function (aSong) {
+        SongService.downvote(aSong)
       };
 
-      $scope.enqueue = function (aId) {
-        // XXX add to queue, upvote
+      $scope.enqueue = function (aSong) {
+        SongService.add(aSong);
       };
     },
     template:
@@ -23,14 +23,14 @@ dprm.directive('song', function () {
 
         '<div class="voting" ng-show="{{song.isQueued}}">' +
           '<div class="voting-buttons" ng-hide="{{song.haveVoted}}">' +
-            '<button class="voting-up">Up</button>' +
-            '<button class="voting-down">Down</button>' +
+            '<button class="voting-up" ng-click="upvote(song.uuid)">Up</button>' +
+            '<button class="voting-down" ng-click="downvote(song.uuid)">Down</button>' +
           '</div>' +
           '<p class="votes">{{song.votes}}</p>' +
         '</div>' +
 
         '<div class="queuing" ng-hide="{{song.isQueued}}">' +
-          '<button class="queue" ng-click="enqueue({{song}})">Add to Queue</button>' +
+          '<button class="queue" ng-click="enqueue(song)">Add to Queue</button>' +
         '</div>' +
       '</div>'
   };
