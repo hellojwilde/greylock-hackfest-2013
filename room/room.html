@@ -12,10 +12,12 @@
 </head>
 <body>
   <section id="now" ng-controller="NowCtrl">
-    <h1>pearjam</h1>
+    <h1><a href="/">pearjam</a></h1>
 
     <div class="song">
       <div class="song-inner">
+        <button id='play'>Play that fucking music</button>
+        <br/>
         <audio id="audio" controls></audio>
         <img src="{{playing.thumbnail}}" alt="{{playing.name}}"/>
         <p class="now-name">{{playing.name}}</p>

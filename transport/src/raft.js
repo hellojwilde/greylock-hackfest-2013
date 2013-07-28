@@ -60,7 +60,9 @@ function Raft(peer, cb, initial_state) {
 	msg.from = self.id
 	var peer = self.peers[name]
 	if(peer && peer.conn.open)
-	    peer.conn.send(JSON.stringify(msg))
+	    peer.conn.send(msg)
+    else
+        console.error("missing", name)
     }
     this.sendto = send
 
@@ -288,9 +290,8 @@ function Raft(peer, cb, initial_state) {
 	}
     }
 
-    function receive(str) {
-	msg = JSON.parse(str);
-
+    function receive(msg) {
+//console.log(msg.type,msg)
 	if(!self.peers[msg.from]) {
 	    console.log("unknown peer " + msg.from, msg)
 	    return;
@@ -320,9 +321,9 @@ function Raft(peer, cb, initial_state) {
 	    break;
 	case "insert":
 	    if(self.state == Raft.states.leader)
-		leaderInsert({data: msg.data, from: msg.from});
+            leaderInsert({data: msg.data, from: msg.from});
 	    else
-		send(leader, msg)
+            self.send(msg.data)
 	    break;
 	case "res":
 	    handleCallback(msg);
@@ -331,6 +332,9 @@ function Raft(peer, cb, initial_state) {
 	    checkTerm(msg);
 	    self.join(msg.name)
 	    break;
+    case "songData":
+        addSongData(msg.uuid, msg.data);
+        break;
 	default:
 	    console.error("unknown message type: " + msg.type);
 	    break;
@@ -355,6 +359,8 @@ Raft.prototype.join = function(client_name, conn) {
     var self = this;
     conn.on('close', function() {
 	delete self.peers[conn.peer];
+	if(conn.peer == leader)
+	    leader = null;
     })
 
     this.broadcast({type: "join", name: client_name})
