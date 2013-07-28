@@ -46,10 +46,13 @@ function NextQueueCtrl($scope, SongService) {
         $scope.songsById[aData].votes--;
         break;
       case "add":
-        $scope.songs.push($scope.songsById[aData.uuid] = aData);
-        $scope.$apply();
+        if (!$scope.songsById[aData.uuid]) {
+          $scope.songs.push($scope.songsById[aData.uuid] = aData);
+        }
         break;
     }
+
+    $scope.$apply();
   });
 }
 
@@ -59,7 +62,7 @@ function NextUploadCtrl($scope, SongService) {
 
   $scope.dropzone = new Dropzone("#uploader");
   $scope.dropzone.on("addedfile", function (aFile) {
-    var uuid = aFile.name;
+    var uuid = Math.random();
     aFile.status = Dropzone.SUCCESS;
     dropped[uuid] = aFile;
 
