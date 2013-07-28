@@ -1,5 +1,5 @@
 function loaded(){
-    document.getElementById('room').value = randomString(8);
+    document.getElementById('room').value = randomString(15);
 }
 
 function randomString(len, charSet) {
@@ -20,17 +20,7 @@ function joinRoom(){
         return;
     }
     var url = document.URL;
-    var nextPlace = url + 'room/' +room + '?isLeader=false';
+    var nextPlace = url + 'room/' +room;
     console.log(nextPlace);
     window.location = nextPlace;
-}
-
-function createRoom(){
-    var room = document.getElementById('room').value;
-    if(!room){
-        alert('You must give a room!');
-        return;
-    }
-    var url = document.URL;
-    window.location = url + 'room/'+room + '?isLeader=true';
 }

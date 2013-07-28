@@ -16,30 +16,34 @@
     <link rel="apple-touch-icon-precomposed" href="img/touch/apple-touch-icon-57x57-precomposed.png">
     <link rel="shortcut icon" href="img/touch/apple-touch-icon.png">
 
+    <link rel="stylesheet" href="../assets/foundation/css/foundation.css">
     <link rel="stylesheet" href="css/main.css">
   </head>
   <body onload="loaded()">
-    <div id='intro'>
-    <h1 name='title'>
-      DPRM
-    <h1>
-    <h3 class='subtitle'>
-      The Democratic People's Republic of Music 
-    </h3>
-    <div class='explaination'>
-      <p>
-        Bacon ipsum dolor sit amet meatball tri-tip shoulder bresaola. T-bone pork loin ball tip pig drumstick. Prosciutto pork belly tongue doner. Cow chuck corned beef meatloaf, andouille meatball short loin ham hock pork chop beef shank pastrami salami strip steak tongue. Biltong shoulder leberkas, pork loin chuck prosciutto kielbasa chicken rump tongue pancetta pork ham bacon.
-      </p>
-    </div>
-    <hr>
-    <div class="room-form">
-      <input type="text" id="room" value="random value">
-      <div class="join-create-room">
-        <button type="button" onclick="joinRoom()">Join a room</button>
-        <button type="button" onclick="createRoom()">Create a room</button>
+    <div id='intro' class="row">
+      <div class="large-8 large-centered columns">
+        <h1 name='title'>
+          DPRM
+        <h1>
+        <h3 class='subtitle'>
+          The Democratic People's Republic of Music 
+        </h3>
+        <div class='explaination'>
+          <p>
+            Bacon ipsum dolor sit amet meatball tri-tip shoulder bresaola. T-bone pork loin ball tip pig drumstick. Prosciutto pork belly tongue doner. Cow chuck corned beef meatloaf, andouille meatball short loin ham hock pork chop beef shank pastrami salami strip steak tongue. Biltong shoulder leberkas, pork loin chuck prosciutto kielbasa chicken rump tongue pancetta pork ham bacon.
+          </p>
+        </div>
+        <hr>
+        <div class="large-7 large-centered columns">
+          <div class="room-form">
+            <input type="text" id="room" value="random value">
+            <div class="join-create-room">
+              <button type="button" id="join" onclick="joinRoom()">Join a room</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
     <script src="js/index.js"></script>
 

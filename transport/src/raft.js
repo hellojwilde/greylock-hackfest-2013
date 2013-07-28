@@ -9,7 +9,7 @@ function randBetween(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function raft(peer, self, cb) {
+function Raft(peer, cb) {
     var states = {
 	leader: 1,
 	follower: 2,
@@ -25,6 +25,7 @@ function raft(peer, self, cb) {
     var lastIndex = 0;
     var commitIndex = 0;
     var peers = {};
+    var self = peer.id;
 
     var baseElectionTimeout = 1000;
     var electionTimer;
@@ -79,7 +80,7 @@ function raft(peer, self, cb) {
 	if(state == state.leader)
 	   return
 
-	console.log("begin election", self)
+	console.log("begin election")
 	
 	currentTerm++;
 	numVotes = 1;
@@ -124,6 +125,63 @@ function raft(peer, self, cb) {
 	    leader = self;
 	}
     }
+
+    function handleCallback(res) {
+	switch(res.status) {
+	case "error":
+	    peers[res.from].nextId--;
+	    leaderInsert(res.msg.request, client);
+	    break;
+	case "success":
+	    var entry = log[res.for];
+	    entry.servers_committed.push(res.from);
+	    peers[res.from].nextId = res.for;
+	    if(!entry.committed && entry.servers_committed.length >= Math.floor(len(peers)/2) + 1) {
+		entry.committed = true;
+		commitIndex = res.for;
+		apply(res.msg);
+		broadcast({
+		    type: "commit",
+		    commitIndex: commitIndex
+		})
+		// todo: maybe send confirmation to original client.
+	    }
+	    break;
+	}
+    }
+
+    function leaderInsert(request) {
+	if(state != states.leader)
+	    return;
+
+	log[lastIndex] = {
+	    servers_committed: [self],
+	    term: currentTerm,
+	    committed: false,
+	    msg: request
+	}
+
+	for(var clientId in peers) {
+	    var peer = peers[clientId]
+	    if(peer.name == self)
+		continue
+	    
+	    var entries = []
+	    for(var i = peer.nextId+1; i <= lastIndex; i++)
+		if(log[i])
+		    entries.push({msg: log[i].msg, id: i});
+
+	    send(clientId, {
+		type: "appendEntries",
+		prevLogIndex: peer.nextId,
+		entries: entries,
+		request: request
+	    })
+	}
+
+	lastIndex++;
+    }
+
     
     function handleAppendEntries(msg) {
 	if(msg.prevLogIndex >= 0 && !log[msg.prevLogIndex]) {
@@ -150,74 +208,28 @@ function raft(peer, self, cb) {
 		    msg: entry.msg
 		})
 	    }
-	    
-	    for(; lastIndex < msg.lastCommittedIndex; lastIndex++) {
-		log[lastIndex].committed = true;
-		log[lastIndex].servers_committed.push(self)
-		apply(log[lastIndex].msg);
-		commitIndex = lastIndex;
-	    }
 	}
     }
 
-    function handleCallback(res) {
-	switch(res.status) {
-	case "error":
-	    peers[res.from].nextId--;
-	    leaderInsert(res.msg.request, client);
-	    break;
-	case "success":
-	    var entry = log[res.for];
-	    entry.servers_committed.push(res.from);
-	    peers[res.from].nextId = res.for
-	    if(!entry.committed && entry.servers_committed.length >= Math.floor(len(peers)/2) + 1) {
-		entry.committed = true;
-		commitIndex = res.for;
-		apply(res.msg);
-		// todo: maybe send confirmation to original client.
-	    }
-	    break;
+    function handleCommit(msg) {
+	for(; lastIndex < msg.commitIndex; lastIndex++) {
+	    log[lastIndex].committed = true;
+	    log[lastIndex].servers_committed.push(self)
+	    apply(log[lastIndex].msg);
+	    commitIndex = lastIndex;
 	}
     }
 
-    // ping
-    setInterval(function() { leaderInsert("") }, baseElectionTimeout / 2);
-    function leaderInsert(request) {
-	if(state != states.leader)
-	    return;
-
-	log[lastIndex] = {
-	    servers_committed: [self],
-	    term: currentTerm,
-	    committed: false,
-	    msg: request
-	}
-
-	for(var clientId in peers) {
-	    var peer = peers[clientId]
-	    if(peer.name == self)
-		continue
-	    
-	    var entries = []
-	    for(var i = peer.nextId; i <= lastIndex; i++)
-		if(log[i])
-		    entries.push({msg: log[i].msg, id: i});
-
-	    send(clientId, {
-		type: "appendEntries",
-		prevLogIndex: peer.nextId,
-		lastCommittedIndex: commitIndex,
-		entries: entries,
-		request: request
-	    })
-	}
-
-	lastIndex++;
+    function ping() {
+	leaderInsert("")
     }
+    setInterval(ping, baseElectionTimeout / 2);
+
 
     function checkTerm(msg) {
 	if(msg.term < currentTerm) {
-	    console.log("reject old message")
+	    console.log("reject old message ("+currentTerm+" > "+msg.term+")", msg)
+	    send(msg.from, {type: "checkTerm"})
 	    return;
 	} else if(msg.term > currentTerm) {
 	    console.log("future term")
@@ -244,10 +256,17 @@ function raft(peer, self, cb) {
 	    checkTerm(msg);
 	    handleVoteRequest(msg);
 	    break;
+	case "checkTerm":
+	    checkTerm(msg);
+	    break;
 	case "appendEntries":
 	    leader = msg.from;
 	    checkTerm(msg);
 	    handleAppendEntries(msg);
+	    break;
+	case "commit":
+	    checkTerm(msg);
+	    handleCommit(msg);
 	    break;
 	case "voteAck":
 	    handleVoteAck(msg);
@@ -259,6 +278,7 @@ function raft(peer, self, cb) {
 	    handleCallback(msg);
 	    break;
 	case "join":
+	    checkTerm(msg);
 	    join(msg.name)
 	    break;
 	default:
