@@ -18,7 +18,7 @@
   </section>
 
   <section id="next" ng-controller="NextCtrl">
-    <ul id="queue" ng-hide="isSearching" ng-controller="NextQueueCtrl">
+    <ul id="queue" ng-hide="isSearching" ng-controller="QueueController">
       <li ng-repeat="queued in queue()"><song bound-song="queued"/></li>
     </ul>
 
@@ -47,7 +47,7 @@
     </div>
 
      <div id="upload" ng-controller="NextUploadCtrl">
-      <form action="/foo" class="dropzone" id="uploader">
+      <form ng-hide="isSearching" action="/foo" class="dropzone" id="uploader">
         <div class="fallback">
           <input name="file" type="file" multiple />
         </div>

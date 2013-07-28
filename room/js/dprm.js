@@ -27,15 +27,16 @@ var dprm = angular.module('dprm', [], function ($provide) {
 
 function NowCtrl($scope, SongService) {
   //get/send a playing update
-  $scope.song = null;
+  $scope.playing = {};
+  $scope.playing.name = "Nothing's playing!";
 }
 
 function NextCtrl($scope, SongService) {
   //send an add update
-  $scope.isSearching = false;
+  $scope.$parent.isSearching = false;
 }
 
-function NextQueueCtrl($scope, SongService) {
+function QueueController($scope, SongService) {
   //get/send queue updates
   $scope.queue = function () {
     return [];
@@ -60,14 +61,14 @@ function NextSearchCtrl($scope, SongSearchService, YouTubeSearchService,
       fetch($scope.results.youtube, YouTubeSearchService);
       fetch($scope.results.soundcloud, SoundCloudSearchService);
 
-      $scope.isSearching = true;
+      $scope.$parent.isSearching = true;
     } else {
-      $scope.isSearching = false;
+      $scope.$parent.isSearching = false;
     }
   };
 
   $scope.endSearch = function () {
-    $scope.isSearching = false;
+    $scope.$parent.isSearching = false;
   };
 }
 
