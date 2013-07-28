@@ -1,3 +1,29 @@
+angular.module('dprm', []).
+  directive('song', function () {
+    return {
+      restrict: 'E',
+      transclude: false,
+      scope: {},
+      template:
+        '<div class="song">' +
+          '<img src="{{song.thumbnail}}" alt="{{song.name}}"/>' +
+          '<p class="name">{{song.name}}</p>' +
+
+          '<div class="voting" ng-show="{{song.isQueued}}">' +
+            '<div class="voting-buttons" ng-hide="{{song.haveVoted}}">' +
+              '<button class="voting-up">Up</button>' +
+              '<button class="voting-down">Down</button>' +
+            '</div>' +
+            '<p class="votes">{{song.votes}}</p>' +
+          '</div>' +
+
+          '<div class="queuing" ng-hide="{{song.isQueued}}">' +
+            '<button class="queue" ng-click="enqueue({{song}})">Add to Queue</button>' +
+          '</div>' +
+        '</div>'
+    }
+  })
+
 /**
  * schema for a song:
  * {
@@ -12,46 +38,55 @@
  * }
  */
 
-function SongsCtrl($scope) {
-  $scope.songs = {};
-
-  // XXX set up raft here
-};
-
 function NowCtrl($scope) {
-  // XXX player code here
+  $scope.song = null;
 }
 
 function NextCtrl($scope) {
   $scope.isSearching = false;
-}
 
-function QueueCtrl($scope) {
-  $scope.getItems = function () {
-    let items = [];
-
-  }
-};
-
-function SearchCtrl($scope) {
-  $scope.search = "";
-  $scope.searchResults = [];
-
-  $scope.isSearchActive = function () {
-    return $scope.search.length > 0;
-  }
-
-  $scope.beginSearch = function () {
-    // TODO async
+  $scope.upvote = function (aId) {
+    // XXX bump votes up
   };
 
-  $scope.cancelSearch = function () {
-    $scope.search = "";
+  $scope.downvote = function (aId) {
+    // XXX bump votes down
+  };
 
-    // TODO async
+  $scope.enqueue = function (aId) {
+    // XXX add to queue, upvote
   };
 }
 
-function UploadCtrl($scope) {
+function NextQueueCtrl($scope) {
+  $scope.queued = function () {
 
+  };
+}
+
+
+function NextSearchCtrl($scope) {
+  $scope.queryText = "";
+  $scope.queries = [];
+  $scope.results = [];
+
+  $scope.editSearch = function () {
+    $scope.resetSearch();
+
+    if ($scope.queryText.length > 0) {
+      $scope.isSearching = true;
+
+      // XXX kick off the new search
+    }
+  };
+
+  $scope.resetSearch = function() {
+    $scope.searchQueries.forEach((aQuery) => aQuery.cancel());
+    $scope.results = [];
+  }
+
+  $scope.endSearch = function () {
+    $scope.resetSearch();
+    $scope.isSearching = false;
+  };
 }
