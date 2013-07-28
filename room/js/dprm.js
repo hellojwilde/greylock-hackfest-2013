@@ -120,12 +120,13 @@ function addSongData(uuid, data) {
 }
 
 var playBtnState;
+var playIdx = 0;
 
 $('#play').click(function() {
   if (playBtnState !== 'PLAY') {
     theSongs.sort(function(a,b) { return b.votes > a.votes; });
     var aud = $('#audio');
-    aud.attr('src', URL.createObjectURL(songDataCollection[theSongs[0].uuid]));
+    aud.attr('src', URL.createObjectURL(songDataCollection[theSongs[playIdx].uuid]));
     aud[0].play();
     $('#play').text('Pause that fucking music >:(');
     playBtnState = 'PLAY';
@@ -136,3 +137,5 @@ $('#play').click(function() {
     playBtnState = 'PAUSE';
   }
 });
+
+aud.addEventListener('ended', function() { playIdx++ });
