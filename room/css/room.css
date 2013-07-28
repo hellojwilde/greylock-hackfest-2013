@@ -1,11 +1,7 @@
-body {
+/*body {
   background-color: #ddd;
   color: #666;
-}
-
-li {
-    list-style: none;
-}
+}*/
 
 #now, #next {
   position: absolute;
@@ -46,35 +42,24 @@ li {
 #next > ul {
   top: 0;
   bottom: 50px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 #next > footer {
   bottom: 0;
 }
 
-.name {
-    margin-left:20%;
-    margin-bottom:20%;
+#next li {
+  margin: 0;
+  padding: 20px;
 }
 
-.voting {
-    position: absolute;
-    width: 1em;
-    padding-left:-20%;
-    margin-top:-3.75em;
-    font-size:150%;
-    margin-right: 20%:
-}
-.votes {
-    position: absolute;
-    margin-left: -120%;
-    margin-top: -1.75em;
-}
-
-li.empty {
+#next li.empty {
   color: #622;
 }
 
-#votes {
-  font-size: 50%;
+#next li .voting {
+  float: left;
 }

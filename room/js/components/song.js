@@ -14,9 +14,6 @@ dprm.directive('song', function () {
     },
     template:
       '<div class="song">' +
-        //'<img src="{{song.thumbnail}}" alt="{{song.name}}"/>' +
-        '<p class="name">{{song.name}}</p>' +
-
         '<div class="voting">' +
           '<div class="voting-buttons" ng-hide="{{song.haveVoted}}">' +
             '<button class="voting-up success button" ng-click="upvote(song)">Up</button>' +
@@ -24,6 +21,8 @@ dprm.directive('song', function () {
           '</div>' +
           '<p class="votes">{{song.votes}}</p>' +
         '</div>' +
+        //'<img src="{{song.thumbnail}}" alt="{{song.name}}"/>' +
+        '<p class="name">{{song.name}}</p>' +
       '</div>'
   };
 });
