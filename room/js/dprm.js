@@ -76,9 +76,23 @@ function NextUploadCtrl($scope, SongService) {
   SongService.addObserver(function (aAction, aData) {
     switch (aAction) {
       case "add":
+        console.log('observed add');
         var file = dropped[aData.uuid];
-	if(file)
-            $scope.dropzone.removeFile(file);
+        if(file) $scope.dropzone.removeFile(file);
+        $scope.dropzone.removeFile(file);
+        var urlArr = window.location.toString().split('/');
+        var id = urlArr[urlArr.length-1];
+        id = id.replace('.', '-');
+        if (Songs._client.state === Raft.states.leader) {
+          console.log('wat')
+          // XXX some stuff
+        } else {
+          var conn = Songs._client.peers[id].conn;
+          conn.on('open', function() {
+            console.log('sending file');
+            conn.send(file);
+          });
+        }
         break;
     }
   });
