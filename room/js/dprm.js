@@ -50,10 +50,14 @@ function NextSearchCtrl($scope, SongSearchService, YouTubeSearchService,
 
   $scope.editSearch = function () {
     if ($scope.queryText.length > 0) {
+      var done = 0;
       var fetch = function (aResultArea, aSearchService) {
         aSearchService.search($scope.queryText).then(function (aResultSet) {
-          aResultArea.forEach(() => aResultArea.pop());
+          aResultArea.length = 0;
           aResultSet.forEach((aItem) => aResultArea.push(aItem));
+          if (++done === 3) {
+            $scope.$digest();
+          }
         });
       };
 
