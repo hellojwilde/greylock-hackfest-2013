@@ -3,15 +3,9 @@ var dprm = angular.module('dprm', [], function ($provide) {
   $provide.factory('SongService', () => Songs.init());
 
   /* Individual search backends. */
-  $provide.factory('SongSearchService', ['SongService', SongSearch.init]);
+  $provide.factory('SongSearchService', SongSearch.init);
   $provide.factory('YouTubeSearchService', YouTubeSearch.init);
   $provide.factory('SoundCloudSearchService', SoundCloudSearch.init);
-
-  /* Search backend that interleaves. */
-  Search.init.$inject = ['SongSearchService', 'YouTubeSearchService',
-                         'SoundCloudSearchService'];
-
-  $provide.factory('SearchService', Search.init);
 });
 
 /**
@@ -45,28 +39,36 @@ function NextQueueCtrl($scope) {
 
 function NextSearchCtrl($scope) {
   $scope.queryText = "";
-  $scope.queries = [];
   $scope.results = [];
 
   $scope.editSearch = function () {
-    $scope.resetSearch();
+    $scope.results = [];
 
     if ($scope.queryText.length > 0) {
-      $scope.isSearching = true;
+      var query = $scope.queryText;
+      var queries =/* [SongSearchService.search(query),
+                     YouTubeSearchService.search(query),
+                     SoundCloudSearchService.search(query)]*/[];
+      var uniqueUUIDs = {};
 
-      // XXX kick off the new search
+    /*  queries.any(function (aResultSet) {
+        aResultSet.forEach(function (aResult) {
+          if (uniqueUUIDs[aResult.uuid]) {
+            return;
+          }
+
+          uniqueUUIDs[aResult.uuid] = true;
+          $scope.results.push(aResult);
+        });
+      });*/
+
+      $scope.isSearching = true;
     } else {
       $scope.isSearching = false;
     }
   };
 
-  $scope.resetSearch = function() {
-    $scope.queries.forEach((aQuery) => aQuery.cancel());
-    $scope.results = [];
-  }
-
   $scope.endSearch = function () {
-    $scope.resetSearch();
     $scope.isSearching = false;
   };
 }
