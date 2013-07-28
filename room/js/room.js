@@ -16,37 +16,64 @@ function NowCtrl($scope) {
   //code
 }
 
+var SearchEngines = {
+  peer: function () {
+    return
+  },
+
+  youtube: function () {
+
+  },
+
+  soundcloud: function () {
+
+  }
+};
+
 function NextCtrl($scope) {
-  $scope.queue = function () {
-    // XXX put real data here
-    return [
-      {
-        uuid: "fasdf",
-        name: "test song",
-        isQueued: true,
-        votes: 4,
-        haveVoted: true
-      },
-      {
-        uuid: "fasdf",
-        name: "test song 43",
-        isQueued: true,
-        votes: 2,
-        haveVoted: false
-      }
-    ];
-  };
+  /* Search */
 
-  $scope.query = "";
-  $scope.isSearching = function () {
-    return $scope.query.length > 0;
-  };
-
+  $scope.isSearching = false;
+  $scope.searchQueryText = "";
+  $scope.searchQueries = [];
   $scope.searchResults = [];
-  $scope.beginSearch = function () {
-    $scope.query = "";
+
+  $scope.modifySearch = function () {
+    if ($scope.searchQuery == "") {
+      $scope.endSearch();
+    }
+
+    $scope.isSearching = true;
   };
+
   $scope.endSearch = function () {
-    $scope.query = "";
+    $scope.searchQueries.forEach(function (aQuery) {
+      aQuery.cancel();
+    });
+    $scope.isSearching = false;
   };
+
+  /* Queue */
+
+  $scope.results = function () {
+    [];
+  }
+
+  /* Song */
+
+  $scope.upvote = function (aId) {
+    // XXX bump votes up
+  };
+
+  $scope.downvote = function (aId) {
+    // XXX bump votes down
+  };
+
+  $scope.enqueue = function (aId) {
+    // XXX add to queue, upvote
+  };
+
+  /* Upload */
+
+  // XXX todo
 }

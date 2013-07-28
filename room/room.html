@@ -13,11 +13,11 @@
 
   <section id="next" ng-controller="NextCtrl">
     <header>
-      <input ng-model="search" ng-change="beginSearch()"/>
-      <button ng-show="isSearching()">Cancel</button>
+      <input ng-model="search" ng-change="modifySearch()"/>
+      <button ng-show="isSearching">Cancel</button>
     </header>
 
-    <ul class="next-list" id="next-queue" ng-hide="isSearching()">
+    <ul id="queue" ng-hide="isSearching">
       <li ng-repeat="song in queue()">
         <img src="{{song.thumbnail}}" alt="{{song.name}}"/>
         <p class="name">{{song.name}}</p>
@@ -32,7 +32,7 @@
       </li>
     </ul>
 
-    <ul id="next-results">
+    <ul id="results" ng-show="isSearching"
       <li ng-repeat="item in results">
         <img src="{{song.thumbnail}}" alt="{{song.name}}"/>
         <p class="name">{{song.name}}</p>
