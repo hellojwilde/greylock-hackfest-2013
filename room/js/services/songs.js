@@ -11,7 +11,6 @@ var Songs = {
     var cfg = {
       host: 'localhost',
       port: 9000,
-      debug: true
     };
 
     this._peer = new Peer(id, cfg);
