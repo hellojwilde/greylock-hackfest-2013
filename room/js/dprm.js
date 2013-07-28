@@ -11,8 +11,6 @@ var dprm = angular.module('dprm', [], function ($provide) {
                    SoundCloudSearch.init.bind(SoundCloudSearch));
 });
 
-$('#audio').hide();
-
 /**
  * schema for a song:
  * {
@@ -119,14 +117,20 @@ function addSongData(uuid, data) {
   songDataCollection[uuid] = new Blob([data]);
 }
 
-function play(uuid) {
-  console.log('trying to play', uuid)
-}
+var playBtnState;
 
 $('#play').click(function() {
-  theSongs.sort(function(a,b) { return b.votes > a.votes; });
-  var aud = $('#audio');
-  aud.attr('src', URL.createObjectURL(songDataCollection[theSongs[0].uuid]));
-  aud.show();
-  aud[0].play();
+  if (playBtnState !== 'PLAY') {
+    theSongs.sort(function(a,b) { return b.votes > a.votes; });
+    var aud = $('#audio');
+    aud.attr('src', URL.createObjectURL(songDataCollection[theSongs[0].uuid]));
+    aud[0].play();
+    $('#play').text('Pause that fucking music >:(');
+    playBtnState = 'PLAY';
+  } else {
+    var aud = $('#audio');
+    aud[0].pause();
+    $('#play').text('Play that fucking music');
+    playBtnState = 'PAUSE';
+  }
 });
