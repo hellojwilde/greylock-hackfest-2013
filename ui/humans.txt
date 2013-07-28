@@ -1,0 +1,19 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+    Bruce Spang - Backend - @brucespang
+    Jez Ng -- Backend -- @int3
+    Michael James -- Server Ops, Frontend
+    Jonathan Wilde -- Frontend, Design -- @hellojwilde
+
+# THANKS
+
+    <name>
+
+# TECHNOLOGY COLOPHON
+
+    HTML5, CSS3
+    Zepto, Modernizr
+    Ember, Handlebars
