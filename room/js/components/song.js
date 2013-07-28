@@ -23,8 +23,8 @@ dprm.directive('song', function () {
 
         '<div class="voting" ng-show="{{song.isQueued}}">' +
           '<div class="voting-buttons" ng-hide="{{song.haveVoted}}">' +
-            '<button class="voting-up" ng-click="upvote(song.uuid)">Up</button>' +
-            '<button class="voting-down" ng-click="downvote(song.uuid)">Down</button>' +
+            '<button class="voting-up success button" ng-click="upvote(song.uuid)">Up</button>' +
+            '<button class="voting-down alert button" ng-click="downvote(song.uuid)">Down</button>' +
           '</div>' +
           '<p class="votes">{{song.votes}}</p>' +
         '</div>' +

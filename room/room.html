@@ -8,8 +8,10 @@
   <script src="http://connect.soundcloud.com/sdk.js"></script>
   <script src="http://cdn.peerjs.com/0/peer.min.js"></script>
 
+  <link rel='stylesheet' href='../assets/foundation/css/foundation.css'>
   <link rel='stylesheet' href='css/dropzone-basic.css'/>
   <link rel='stylesheet' href='css/room.css'/>
+
 </head>
 <body>
   <section id="now" ng-controller="NowCtrl">
@@ -20,12 +22,10 @@
   </section>
 
   <section id="next" ng-controller="NextCtrl">
-    <ul>
-      <li ng-repeat="song in songs"><song bound-song="song"/></li>
-      <li ng-show="!songs.length">
-        There's no songs in the room.
-      </li>
+    <ul ng-repeat="song in songs">
+      <li class="song-li"><song bound-song="song"/></li>
     </ul>
+    <p id="empty-q" ng-show="!songs.length">There's no songs in the room.</p>
 
     <footer>
       <form action="/foo" class="dropzone" id="uploader">
