@@ -27,10 +27,10 @@ Dprm.SongModel = DS.Model.extend({
   name: DS.attr("string")
 });
 
-Dprm.SongModel.FIXTURES = {
+Dprm.SongModel.FIXTURES = [
   { votes: 5, haveVoted: false, location: "", albumName: "Wootalbum", name: "Wootsong" },
   { votes: 2, haveVoted: true, location: "", albumName: "Wootalbum", name: "Wootsong2" }
-};
+];
 
 Dprm.SongView = Ember.View.extend({
   templateName: "view-song"
