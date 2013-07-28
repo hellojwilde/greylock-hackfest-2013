@@ -319,7 +319,10 @@ function Raft(peer, cb, initial_state) {
 	    handleVoteAck(msg);
 	    break;
 	case "insert":
-	    leaderInsert({data: msg.data, from: msg.from});
+	    if(self.state == Raft.states.leader)
+		leaderInsert({data: msg.data, from: msg.from});
+	    else
+		send(leader, msg)
 	    break;
 	case "res":
 	    handleCallback(msg);
@@ -347,7 +350,7 @@ Raft.prototype.join = function(client_name, conn) {
 	return
 
     if(!conn)
-	conn = this.peer.connect(client_name)
+	conn = this.peer.connect(client_name, {reliable: true})
     conn.on('data', this.receive);
     var self = this;
     conn.on('close', function() {
