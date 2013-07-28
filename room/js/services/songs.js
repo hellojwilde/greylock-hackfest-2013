@@ -9,7 +9,7 @@ var Songs = {
     id = id.replace('.','-');
 
     var cfg = {
-      host: 'localhost',
+      host: 'ec2-54-215-180-78.us-west-1.compute.amazonaws.com',
       port: 9000
     };
 

@@ -77,7 +77,8 @@ function NextUploadCtrl($scope, SongService) {
     switch (aAction) {
       case "add":
         var file = dropped[aData.uuid];
-        $scope.dropzone.removeFile(file);
+	if(file)
+            $scope.dropzone.removeFile(file);
         break;
     }
   });
