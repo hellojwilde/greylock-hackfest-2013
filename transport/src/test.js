@@ -1,14 +1,7 @@
 var id = "" + randBetween(0,100);
 console.log("starting as " + id)
 
-var rtc = holla.createClient({host: "localhost", port:8080});
-var client = new raft(rtc, id, function(data) {
+var peer = new Peer(id, {host: 'localhost', port: 9000});
+var client = new raft(peer, id, function(data) {
     console.error("apply:", data)
-})
-
-rtc.register(id, function(worked) {
-    if(!worked) {
-	console.error("couldn't register as " + id + " ack");
-	return;
-    }
 })
