@@ -47,7 +47,7 @@
     </div>
 
      <div id="upload" ng-controller="NextUploadCtrl">
-      <form action="/foo" class="dropzone" id="uploader">
+      <form ng-hide="isSearching" action="/foo" class="dropzone" id="uploader">
         <div class="fallback">
           <input name="file" type="file" multiple />
         </div>

@@ -61,14 +61,14 @@ function NextSearchCtrl($scope, SongSearchService, YouTubeSearchService,
       fetch($scope.results.youtube, YouTubeSearchService);
       fetch($scope.results.soundcloud, SoundCloudSearchService);
 
-      $scope.isSearching = true;
+      $scope.$parent.isSearching = true;
     } else {
-      $scope.isSearching = false;
+      $scope.$parent.isSearching = false;
     }
   };
 
   $scope.endSearch = function () {
-    $scope.isSearching = false;
+    $scope.$parent.isSearching = false;
   };
 }
 
