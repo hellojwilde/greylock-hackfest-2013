@@ -20,10 +20,7 @@ function joinRoom(){
         return;
     }
     var url = document.URL;
-    if(!url.match(/$\//)){
-        url+='/';
-    }
-    var nextPlace = url + room + '?isLeader=false';
+    var nextPlace = url + 'room/' +room + '?isLeader=false';
     console.log(nextPlace);
     window.location = nextPlace;
 }
@@ -35,8 +32,5 @@ function createRoom(){
         return;
     }
     var url = document.URL;
-    if(!url.match(/$\//)){
-        url+='/';
-    }
-    window.location = url + room + '?isLeader=true';
+    window.location = url + 'room/'+room + '?isLeader=true';
 }
