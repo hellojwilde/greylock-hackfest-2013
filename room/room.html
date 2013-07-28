@@ -11,14 +11,14 @@
     <!-- Player goes here -->
   </section>
 
-  <section id="next" ng-contoller="NextCtrl">
+  <section id="next" ng-controller="NextCtrl">
     <header>
       <input ng-model="search" ng-change="beginSearch()"/>
       <button ng-show="isSearchActive()" ng-click="cancelSearch()">Cancel</button>
     </header>
 
     <div id="next-queue" ng-hide="isSearchActive()">
-      Q
+      Queue
     </div>
 
     <div id="next-search" ng-show="isSearchActive()">
@@ -29,8 +29,51 @@
   </section>
 
   <script>
-    function RoomCtrl($scope) {
-      // Logic for playing a song goes here
+    var PeerSongs = {
+      _songs: {},
+
+      init: function () {
+        // XXX setup raft stuff here
+      },
+
+      add: function (aID, aSong) {
+
+      },
+
+      vote: function (aID, aOffset) {
+
+      },
+
+      search: function (aSearchQuery) {
+        var deferred = when.defer();
+
+        // XXX search the local database here
+
+        return deferred.promise;
+      }
+    };
+
+    var YouTubeSongs = {
+      search: function (aSearchQuery) {
+        var deferred = when.defer();
+
+        // XXX do a search on the youtube api here
+
+        return deferred.promise;
+      }
+    };
+
+    var SoundCloudSongs = {
+      search: function (aSearchQuery) {
+        var deferred = when.defer();
+
+        // XXX do a search on the soundcloud api here
+
+        return deferred.promise;
+      }
+    };
+
+    function PlayerCtrl($scope) {
       $scope.playing = {};
     }
 
@@ -44,14 +87,16 @@
 
       $scope.isSearchActive = function () {
         return $scope.search.length > 0;
-      };
+      }
 
       $scope.beginSearch = function () {
-        // TODO, async
+        // TODO async
       };
 
       $scope.cancelSearch = function () {
-        return $scope.search = "";
+        $scope.search = "";
+
+        // TODO async
       };
 
       /* ----------------------------------------------------------------------
