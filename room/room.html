@@ -13,22 +13,23 @@
 </head>
 <body>
   <section id="now" ng-controller="NowCtrl">
-    <img src="{{playing.thumbnail}}" alt="{{playing.name}}"/>
-    <p class="now-name">{{playing.name}}</p>
+    <div class="song"><div class="song-inner">
+      <img src="{{playing.thumbnail}}" alt="{{playing.name}}"/>
+      <p class="now-name">{{playing.name}}</p>
+    </div>            </div>
   </section>
 
   <section id="next" ng-controller="NextCtrl">
-    <ul ng-hide="isSearching" ng-controller="QueueController">
-      <li ng-repeat="queued in queue()">
-        <song bound-song="queued"/>
+    <ul>
+      <li ng-repeat="song in songs"><song bound-song="song"/></li>
+      <li ng-show="!songs.length">
+        There's no songs in the room.
       </li>
     </ul>
 
     <footer>
-      <form ng-hide="isSearching" action="/foo" class="dropzone" id="uploader">
-        <div class="fallback">
-          <input name="file" type="file" multiple />
-        </div>
+      <form action="/foo" class="dropzone" id="uploader">
+        <div class="fallback"><input name="file" type="file" multiple /></div>
       </form>
     </footer>
   </section>

@@ -10,58 +10,35 @@
   background: #333;
 }
 
+#now .song {
+  display: table;
+  width: 100%;
+  height: 100%;
+}
+
+#now .song-inner {
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}
+
 #next {
   width: 300px;
   right: 0;
 }
 
-  #queue, #search-results {
-    position: absolute;
-    overflow: auto;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 90px;
-  }
-
-  #search-bar {
-    position: absolute;
-    bottom: 60px;
-    height: 30px;
-    left: 0;
-    right: 0;
-  }
-
-  #upload {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    left: 0;
-  }
-
-#search-results h2 {
-  font-family: sans-serif;
-  text-align: center;
+#next > ul,
+#next > footer {
+  position: absolute;
+  left: 0;
+  right: 0;
 }
 
-.songs {
-  margin: 0;
-  padding: 10px;
+#next > ul {
+  top: 0;
+  bottom: 50px;
 }
 
-.songs li {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.song:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-.song img {
-  float: left;
-  margin-right: 10px;
+#next > footer {
+  bottom: 0;
 }
