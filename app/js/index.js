@@ -1,5 +1,5 @@
 function loaded(){
-    document.getElementById('room').value = randomString(16);
+    document.getElementById('room').value = randomString(15);
 }
 
 function randomString(len, charSet) {
