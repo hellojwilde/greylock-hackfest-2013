@@ -34,7 +34,7 @@ var Songs = function(){
     init: function () {
         var urlArr = window.location.toString().split('/');
         var id = urlArr[urlArr.length-1];
-        id = id.replace('.','-');
+        id = id.replace(/[^A-Za-z\-]/g,'');
         var cfg = {
           host: 'ec2-54-215-180-78.us-west-1.compute.amazonaws.com',
           port: 9000
