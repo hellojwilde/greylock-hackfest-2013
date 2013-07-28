@@ -35,6 +35,12 @@ function raft(rtc, self, cb) {
     var callbacks = {};
     var baseElectionTimeout = 1000;
     var electionTimer;
+
+    rtc.on("call", function(call){
+	call.answer();
+	call.on("chat", client.receive)
+    })
+    
     resetElectionTimeout();
     
     function send(name, msg) {
@@ -118,14 +124,6 @@ function raft(rtc, self, cb) {
 		reason: "prevLogIndex",
 		msg: msg
 	    })
-	  //} else if(msg.prevLogIndex >= 0 && log[msg.prevLogIndex].msg != msg.prevLogEntry) {
-	  //   console.error("error handling msg: mismatch prevLogEntry", msg);
-	  //   send(msg.from, {
-	  // 	type: "res",
-	  // 	status: "error",
-	  // 	reason: "prevLogEntry",
-	  // 	msg: msg
-	  //   })
  	} else {
 	    for(var idx in msg.entries) {
 		var entry = msg.entries[idx];
@@ -210,6 +208,8 @@ function raft(rtc, self, cb) {
     function join(client_name, call) {
 	if(!call)
 	    call = rtc.call(client_name)
+
+	broadcast({type: "join", name: client_name})
 	
 	var peer = new Peer(client_name, call)
 	peers[client_name] = peer
@@ -259,6 +259,9 @@ function raft(rtc, self, cb) {
 	    break;
 	case "res":
 	    handleCallback(msg);
+	    break;
+	case "join":
+	    join(msg.name)
 	    break;
 	default:
 	    console.error("unknown message type: " + msg.type);
