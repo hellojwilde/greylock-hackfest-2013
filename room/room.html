@@ -7,7 +7,9 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.js"></script>
   <script src="http://connect.soundcloud.com/sdk.js"></script>
   <script src="http://cdn.peerjs.com/0/peer.min.js"></script>
+
   <link rel='stylesheet' href='css/dropzone-basic.css'/>
+  <link rel='stylesheet' href='css/room.css'/>
 </head>
 <body>
   <section id="now" ng-controller="NowCtrl">
@@ -21,24 +23,36 @@
     </ul>
 
     <div id="search" ng-controller="NextSearchCtrl">
-      <ul id="results" ng-show="isSearching">
-        <li ng-repeat="result in results"><song bound-song="result"/></li>
-      </ul>
+      <div id="search-results" ng-show="isSearching">
+        <h2>On the Network</h2>
+        <ul><li ng-repeat="result in results.songs">
+          <song bound-song="result"/>
+        </li></ul>
+
+        <h2>YouTube</h2>
+        <ul><li ng-repeat="result in results.youtube">
+          <song bound-song="result"/>
+        </li></ul>
+
+        <h2>SoundCloud</h2>
+        <ul><li ng-repeat="result in results.soundcloud">
+          <song bound-song="result"/>
+        </li></ul>
+      </div>
 
       <div id="search-bar">
-        <input ng-model="queryText" ng-change="editSearch()"/>
+        <input type="search" placeholder="Search for songs..." ng-model="queryText" ng-change="editSearch()"/>
         <button ng-show="isSearching" ng-click="endSearch()">Cancel</button>
       </div>
     </div>
 
-<!--     <div id="upload" ng-controller="NextUploadCtrl">
+     <div id="upload" ng-controller="NextUploadCtrl">
       <form action="/foo" class="dropzone" id="uploader">
         <div class="fallback">
           <input name="file" type="file" multiple />
         </div>
       </form>
-      <button ng-click="upload()">Upload</button>
-    </div> -->
+    </div>
   </section>
 
   <script src="js/zepto.min.js"></script>

@@ -43,22 +43,20 @@ function NextQueueCtrl($scope) {
 function NextSearchCtrl($scope, SongSearchService, YouTubeSearchService,
                         SoundCloudSearchService) {
   $scope.queryText = "";
-  $scope.results = [];
+  $scope.results = { songs: [], youtube: [], soundcloud: [] };
 
   $scope.editSearch = function () {
-    $scope.results.forEach(() => $scope.results.pop());
-
     if ($scope.queryText.length > 0) {
-      var query = $scope.queryText;
-      var queries = [SongSearchService.search(query),
-                     YouTubeSearchService.search(query),
-                     SoundCloudSearchService.search(query)];
-
-      when.any(queries, function (aResultSet) {
-        aResultSet.forEach(function (aResult) {
-          $scope.results.push(aResult);
+      var fetch = function (aResultArea, aSearchService) {
+        aSearchService.search($scope.queryText).then(function (aResultSet) {
+          aResultArea.forEach(() => aResultArea.pop());
+          aResultSet.forEach((aItem) => aResultArea.push(aItem));
         });
-      });
+      };
+
+      fetch($scope.results.songs, SongSearchService);
+      fetch($scope.results.youtube, YouTubeSearchService);
+      fetch($scope.results.soundcloud, SoundCloudSearchService);
 
       $scope.isSearching = true;
     } else {

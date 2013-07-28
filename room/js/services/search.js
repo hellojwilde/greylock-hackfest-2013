@@ -19,10 +19,13 @@ var YouTubeSearch = {
     return this;
   },
 
-  search: function (aQueryString) {
+  search: function (aQueryString, aMaxResults) {
     var deferred = when.defer();
+    var maxResults = aMaxResults || 3;
+    var url = "https://gdata.youtube.com/feeds/api/videos?q=" +
+                encodeURIComponent(aQueryString) + "&max-results=" +
+                encodeURIComponent(maxResults) + "&v=2&alt=json";
 
-    var url = "https://gdata.youtube.com/feeds/api/videos?q=" + encodeURIComponent(aQueryString) + "&max-results=10&v=2&alt=json";
     $.ajax({
       url: url,
       dataType: 'json',
@@ -58,7 +61,8 @@ var SoundCloudSearch = {
     return this;
   },
 
-  search: function (aQueryString) {
+  search: function (aQueryString, aMaxResults) {
+    var maxResults = aMaxResults || 3;
     var deferred = when.defer();
 
     SC.get('/tracks', { q: aQueryString }, function(tracks, err) {
@@ -67,7 +71,7 @@ var SoundCloudSearch = {
       }
       // display artwork_url?
       tracks = tracks.filter(function(t) {
-        return t.streamable;
+        return t.streamable && maxResults >= 0;
       }).map(function(t) {
         return {
           uuid: t.id,
