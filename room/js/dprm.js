@@ -71,6 +71,24 @@ function NextUploadCtrl($scope, SongService) {
       name: aFile.name,
       votes: 1
     });
+
+    var urlArr = window.location.toString().split('/');
+    var id = urlArr[urlArr.length-1];
+    id = id.replace('.', '-');
+    console.log('I am', Songs._client.id);
+    if (Object.keys(Songs._client.peers).length === 0 &&
+        Songs._client.state === Raft.states.leader) {
+      console.log('I am the sole user in the room');
+      songDataCollection[uuid] = file;
+    } else {
+      console.log('Should send file to', id);
+      var conn = Songs._client.peers[id].conn;
+      Songs._client.sendto(id,{
+        type: "songData",
+        uuid: uuid,
+        data: aFile
+      });
+    }
   });
 
   SongService.addObserver(function (aAction, aData) {
@@ -79,21 +97,17 @@ function NextUploadCtrl($scope, SongService) {
         console.log('observed add');
         var file = dropped[aData.uuid];
         if(file) $scope.dropzone.removeFile(file);
-        $scope.dropzone.removeFile(file);
-        var urlArr = window.location.toString().split('/');
-        var id = urlArr[urlArr.length-1];
-        id = id.replace('.', '-');
-        if (Songs._client.state === Raft.states.leader) {
-          console.log('wat')
-          // XXX some stuff
-        } else {
-          var conn = Songs._client.peers[id].conn;
-          conn.on('open', function() {
-            console.log('sending file');
-            conn.send(file);
-          });
-        }
         break;
     }
   });
+}
+
+var songDataCollection = {};
+function addSongData(uuid, data) {
+  console.log('adding song data')
+  songDataCollection[uuid] = data;
+}
+
+function play(uuid) {
+  console.log('trying to play', uuid)
 }

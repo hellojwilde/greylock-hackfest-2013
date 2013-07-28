@@ -9,8 +9,9 @@ var Songs = {
     id = id.replace('.','-');
 
     var cfg = {
-      host: 'ec2-54-215-180-78.us-west-1.compute.amazonaws.com',
-      port: 9000
+      host: 'localhost',
+      port: 9000,
+      debug: true
     };
 
     this._peer = new Peer(id, cfg);
