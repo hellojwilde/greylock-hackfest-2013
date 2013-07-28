@@ -60,7 +60,12 @@ Dropzone.autoDiscover = false;
 function NextUploadCtrl($scope, SongService) {
   var dropped = {};
 
-  $scope.dropzone = new Dropzone("#uploader");
+  $scope.dropzone = new Dropzone(document.body, {
+    url: "/room/upload",
+    previewsContainer: "#upload-previews",
+    clickable: "#upload-clickable"
+  });
+
   $scope.dropzone.on("addedfile", function (aFile) {
     var uuid = Math.random();
     aFile.status = Dropzone.SUCCESS;
@@ -77,8 +82,9 @@ function NextUploadCtrl($scope, SongService) {
     switch (aAction) {
       case "add":
         var file = dropped[aData.uuid];
-	if(file)
-            $scope.dropzone.removeFile(file);
+        if(file) {
+          $scope.dropzone.removeFile(file);
+        }
         break;
     }
   });

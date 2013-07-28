@@ -5,7 +5,6 @@
   <title>Room</title>
 
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.js"></script>
-  <script src="http://connect.soundcloud.com/sdk.js"></script>
   <script src="http://cdn.peerjs.com/0/peer.min.js"></script>
 
   <link rel='stylesheet' href='../assets/foundation/css/foundation.css'>
@@ -29,14 +28,13 @@
     <ul ng-controller="NextQueueCtrl">
       <li ng-repeat="song in songs | orderBy:'-votes'"><song bound-song="song"/></li>
       <li class="empty" ng-show="!songs.length">
-        There's no songs in the room. Drag a song into the box below.
+        There's no songs in the room. Drag a song in here.
       </li>
     </ul>
 
     <footer ng-controller="NextUploadCtrl">
-      <form action="/foo" class="dropzone" id="uploader">
-        <div class="fallback"><input name="file" type="file" multiple /></div>
-      </form>
+      <div id="upload-previews" class="dropzone-previews"></div>
+      <button id="upload-clickable">+ Add Song</button>
     </footer>
   </section>
 
