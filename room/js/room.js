@@ -60,8 +60,9 @@ function NextCtrl($scope) {
 }
 
 function NextQueueCtrl($scope) {
-  $scope.queued = function () {
-
+  $scope.queue = function () {
+    // XXX pull from service
+    return [];
   };
 }
 
