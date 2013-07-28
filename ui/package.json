@@ -1,0 +1,9 @@
+{
+    "name": "dprm",
+    "description": "Democratic Poeple's Republic of Music",
+    "version": "0.0.1",
+    "dependencies": {
+        "ember": ">= 1.0",
+        "peerjs": "*"
+    }
+}
