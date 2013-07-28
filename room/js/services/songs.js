@@ -49,14 +49,13 @@ var Songs = function(){
             client = new Raft(peer, rcvmsg);
             console.log(client.id, id);
             client.join(id);
-            client.send("hello!");
+            client.send({action:"upvote",uuid:"9070-8909"});
           });
         });
         peer.on('open', function(){
           client = new Raft(peer, rcvmsg, Raft.states.leader);
           console.log(client.id, id);
           client.join(id);
-          client.send("hello!");
         });
       return this;
     },
@@ -66,7 +65,7 @@ var Songs = function(){
     },
 
     upvote: function (uuid) {
-
+      console.log('uuid: ', uuid);
     },
 
     downvote: function (uuid) {
@@ -81,6 +80,13 @@ var Songs = function(){
       client.send({
         action:action,
         uuid:uuid
+      });
+    },
+
+    addSong: function(obj){
+      client.send({
+        action: 'add',
+        obj:obj
       });
     }
   };
