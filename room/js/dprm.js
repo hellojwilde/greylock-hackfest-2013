@@ -46,22 +46,16 @@ function NextSearchCtrl($scope, SongSearchService, YouTubeSearchService,
   $scope.results = [];
 
   $scope.editSearch = function () {
-    $scope.results = [];
+    $scope.results.forEach(() => $scope.results.pop());
 
     if ($scope.queryText.length > 0) {
       var query = $scope.queryText;
       var queries = [SongSearchService.search(query),
                      YouTubeSearchService.search(query),
                      SoundCloudSearchService.search(query)];
-      var uniqueUUIDs = {};
 
       when.any(queries, function (aResultSet) {
         aResultSet.forEach(function (aResult) {
-          if (uniqueUUIDs[aResult.uuid]) {
-            return;
-          }
-
-          uniqueUUIDs[aResult.uuid] = true;
           $scope.results.push(aResult);
         });
       });
