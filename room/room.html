@@ -28,7 +28,7 @@
     <ul ng-controller="NextQueueCtrl">
       <li ng-repeat="song in songs | orderBy:'-votes'"><song bound-song="song"/></li>
       <li class="empty" ng-show="!songs.length">
-        There's no songs in the room. Drag a song in here.
+        Start this party. Drag a song in.
       </li>
     </ul>
 
