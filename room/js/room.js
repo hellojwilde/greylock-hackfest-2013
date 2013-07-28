@@ -3,7 +3,20 @@ angular.module('dprm', []).
     return {
       restrict: 'E',
       transclude: false,
-      scope: {},
+      scope: { song: "=boundSong", },
+      controller: function ($scope, $element) {
+        $scope.upvote = function (aId) {
+          // XXX bump votes up
+        };
+
+        $scope.downvote = function (aId) {
+          // XXX bump votes down
+        };
+
+        $scope.enqueue = function (aId) {
+          // XXX add to queue, upvote
+        };
+      },
       template:
         '<div class="song">' +
           '<img src="{{song.thumbnail}}" alt="{{song.name}}"/>' +
@@ -22,7 +35,7 @@ angular.module('dprm', []).
           '</div>' +
         '</div>'
     }
-  })
+  });
 
 /**
  * schema for a song:
@@ -44,18 +57,6 @@ function NowCtrl($scope) {
 
 function NextCtrl($scope) {
   $scope.isSearching = false;
-
-  $scope.upvote = function (aId) {
-    // XXX bump votes up
-  };
-
-  $scope.downvote = function (aId) {
-    // XXX bump votes down
-  };
-
-  $scope.enqueue = function (aId) {
-    // XXX add to queue, upvote
-  };
 }
 
 function NextQueueCtrl($scope) {
@@ -63,7 +64,6 @@ function NextQueueCtrl($scope) {
 
   };
 }
-
 
 function NextSearchCtrl($scope) {
   $scope.queryText = "";
@@ -77,11 +77,13 @@ function NextSearchCtrl($scope) {
       $scope.isSearching = true;
 
       // XXX kick off the new search
+    } else {
+      $scope.isSearching = false;
     }
   };
 
   $scope.resetSearch = function() {
-    $scope.searchQueries.forEach((aQuery) => aQuery.cancel());
+    $scope.queries.forEach((aQuery) => aQuery.cancel());
     $scope.results = [];
   }
 
