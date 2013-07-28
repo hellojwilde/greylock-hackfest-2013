@@ -12,13 +12,18 @@ function randomString(len, charSet) {
     return randomString;
 }
 
+
 function joinRoom(){
     var room = document.getElementById('room').value;
     if(!room){
         alert('You must give a room!');
         return;
     }
-    var nextPlace = document.URL + '/' + room + '?isLeader=false';
+    var url = document.URL;
+    if(!url.match(/$\//)){
+        url+='/';
+    }
+    var nextPlace = url + room + '?isLeader=false';
     console.log(nextPlace);
     window.location = nextPlace;
 }
@@ -29,5 +34,9 @@ function createRoom(){
         alert('You must give a room!');
         return;
     }
-    window.location = document.URL + '/' + room + '?isLeader=true';
+    var url = document.URL;
+    if(!url.match(/$\//)){
+        url+='/';
+    }
+    window.location = url + room + '?isLeader=true';
 }
