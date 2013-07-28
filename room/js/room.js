@@ -1,41 +1,79 @@
-angular.module('dprm', []).
-  directive('song', function () {
-    return {
-      restrict: 'E',
-      transclude: false,
-      scope: { song: "=boundSong", },
-      controller: function ($scope, $element) {
-        $scope.upvote = function (aId) {
-          // XXX bump votes up
-        };
+var dprm = angular.module('dprm', []);
 
-        $scope.downvote = function (aId) {
-          // XXX bump votes down
-        };
+dprm.directive('song', function () {
+  return {
+    restrict: 'E',
+    transclude: false,
+    scope: { song: "=boundSong", },
+    controller: function ($scope, $element) {
+      $scope.upvote = function (aId) {
+        // XXX bump votes up
+      };
 
-        $scope.enqueue = function (aId) {
-          // XXX add to queue, upvote
-        };
-      },
-      template:
-        '<div class="song">' +
-          '<img src="{{song.thumbnail}}" alt="{{song.name}}"/>' +
-          '<p class="name">{{song.name}}</p>' +
+      $scope.downvote = function (aId) {
+        // XXX bump votes down
+      };
 
-          '<div class="voting" ng-show="{{song.isQueued}}">' +
-            '<div class="voting-buttons" ng-hide="{{song.haveVoted}}">' +
-              '<button class="voting-up">Up</button>' +
-              '<button class="voting-down">Down</button>' +
-            '</div>' +
-            '<p class="votes">{{song.votes}}</p>' +
+      $scope.enqueue = function (aId) {
+        // XXX add to queue, upvote
+      };
+    },
+    template:
+      '<div class="song">' +
+        '<img src="{{song.thumbnail}}" alt="{{song.name}}"/>' +
+        '<p class="name">{{song.name}}</p>' +
+
+        '<div class="voting" ng-show="{{song.isQueued}}">' +
+          '<div class="voting-buttons" ng-hide="{{song.haveVoted}}">' +
+            '<button class="voting-up">Up</button>' +
+            '<button class="voting-down">Down</button>' +
           '</div>' +
+          '<p class="votes">{{song.votes}}</p>' +
+        '</div>' +
 
-          '<div class="queuing" ng-hide="{{song.isQueued}}">' +
-            '<button class="queue" ng-click="enqueue({{song}})">Add to Queue</button>' +
-          '</div>' +
-        '</div>'
+        '<div class="queuing" ng-hide="{{song.isQueued}}">' +
+          '<button class="queue" ng-click="enqueue({{song}})">Add to Queue</button>' +
+        '</div>' +
+      '</div>'
+  }
+});
+
+dprm.factory('$songs', function () {
+  var Songs = {
+    _songs: {},
+
+    init: function () {
+
+    },
+
+    add: function () {
+
+    },
+
+    upvote: function () {
+
+    },
+
+    downvote: function () {
+
+    },
+
+    enqueue: function () {
+
+    },
+
+    play: function () {
+
+    },
+
+    receiveMessage: function () {
+
     }
-  });
+  };
+
+  Songs.init();
+  return Songs;
+});
 
 /**
  * schema for a song:
@@ -133,8 +171,9 @@ function NextCtrl($scope) {
 }
 
 function NextQueueCtrl($scope) {
-  $scope.queued = function () {
-
+  $scope.queue = function () {
+    // XXX pull from service
+    return [];
   };
 }
 
@@ -164,4 +203,8 @@ function NextSearchCtrl($scope) {
     $scope.resetSearch();
     $scope.isSearching = false;
   };
+}
+
+function name(args) {
+  //code
 }
