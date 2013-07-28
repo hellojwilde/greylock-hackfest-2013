@@ -32,12 +32,15 @@ function NowCtrl($scope, SongService) {
 }
 
 function NextQueueCtrl($scope, SongService) {
-  // song list
+  $scope.songPlaying = null;
   $scope.songs = [];
-  $scope.songsById = {};
+  $scope.songsById = {}; // index for $scope.songs
 
-  $scope.observe = function (aAction, aData) {
+  var obs = { observe: function (aAction, aData) {
     switch (aAction) {
+      case "play":
+        $scope.songPlaying = $scope.songsById[aData];
+        break;
       case "upvote":
         $scope.songsById[aData].votes++;
         break;
@@ -49,19 +52,37 @@ function NextQueueCtrl($scope, SongService) {
         $scope.$apply();
         break;
     }
-  };
-  SongService.addObserver($scope);
+  } };
+  SongService.addObserver(obs);
 }
 
 Dropzone.autoDiscover = false;
 function NextUploadCtrl($scope, SongService) {
+  $scope.dropped = {};
+
   $scope.dropzone = new Dropzone("#uploader");
   $scope.dropzone.on("addedfile", function (aFile) {
+    var uuid = aFile.name;
+
     SongService.add({
-      uuid: aFile.name,
+      uuid: uuid,
       name: aFile.name,
       votes: 1
     });
+
+    $scope.dropped[uuid] = aFile;
+
     aFile.status = Dropzone.SUCCESS;
   });
+
+  /*$scope.observe = function (aAction, aData) {
+    switch (aAction) {
+      case "add":
+        var file = $scope.dropped[aData.uuid];
+        $scope.dropzone.removeFile(file);
+        delete $scope.dropped[aData.uuid];
+        break;
+    }
+  };
+  SongService.addObserver($scope);*/
 }
