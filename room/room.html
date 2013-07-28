@@ -18,42 +18,26 @@
   </section>
 
   <section id="next" ng-controller="NextCtrl">
-    <ul id="queue" ng-hide="isSearching" ng-controller="QueueController">
-      <li ng-repeat="queued in queue()"><song bound-song="queued"/></li>
+    <ul ng-hide="isSearching" ng-controller="QueueController">
+      <li ng-repeat="queued in queue()">
+        <song bound-song="queued"/>
+      </li>
     </ul>
 
-    <div id="search" ng-controller="NextSearchCtrl">
-      <div id="search-results" ng-show="isSearching">
-        <h2>On the Network</h2>
-        <ul><li ng-repeat="result in results.songs">
-          <song bound-song="result"/>
-        </li></ul>
-
-        <h2>YouTube</h2>
-        <ul><li ng-repeat="result in results.youtube">
-          <song bound-song="result"/>
-        </li></ul>
-
-        <h2>SoundCloud</h2>
-        <ul><li ng-repeat="result in results.soundcloud">
-          <song bound-song="result"/>
-        </li></ul>
-      </div>
-
-      <div id="search-bar">
-        <input type="search" placeholder="Search for songs..." ng-model="queryText" ng-change="editSearch()"/>
-        <button ng-show="isSearching" ng-click="endSearch()">Cancel</button>
-      </div>
-    </div>
-
-     <div id="upload" ng-controller="NextUploadCtrl">
+    <footer>
       <form ng-hide="isSearching" action="/foo" class="dropzone" id="uploader">
         <div class="fallback">
           <input name="file" type="file" multiple />
         </div>
       </form>
-    </div>
+    </footer>
   </section>
+
+  <script>
+    if (!console || !console.log) {
+      console = { log: () => {} };
+    }
+  </script>
 
   <script src="js/zepto.min.js"></script>
   <script src="js/when.js"></script>

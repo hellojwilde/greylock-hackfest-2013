@@ -18,7 +18,7 @@ function Raft(peer, cb, initial_state) {
     // party of n plus 1 by whether or not we have the room_id name.
     if(!initial_state)
 	initial_state = Raft.states.follower
-	
+
     var self = this;
     self.peer = peer;
     self.currentTerm = 0;
@@ -40,7 +40,7 @@ function Raft(peer, cb, initial_state) {
     else
 	self.leader = null;
     resetElectionTimeout();
-    
+
     peer.on('open', function(id) {
 	self.id = id;
 	if(self.state == Raft.states.leader)
@@ -54,7 +54,7 @@ function Raft(peer, cb, initial_state) {
     window.addEventListener("unload", function() {
 	self.leave();
     })
-    
+
     function send(name, msg) {
 	msg.term = self.currentTerm
 	msg.from = self.id
@@ -86,10 +86,10 @@ function Raft(peer, cb, initial_state) {
     function flushMsgQueue() {
 	if(!self.leader)
 	    return;
-    
+
 	for(var m in self.queue) {
 	    msg = self.queue[m];
-	    
+
 	    if(self.state == Raft.states.leader)
 		self.leaderInsert({data: msg, from: self.id})
 	    else
@@ -101,7 +101,7 @@ function Raft(peer, cb, initial_state) {
     this.flushMsgQueue = flushMsgQueue
     setInterval(this.flushMsgQueue, 500)
 
-    
+
     function beginElection() {
 	if(self.state == Raft.states.leader)
 	    return
@@ -173,7 +173,7 @@ function Raft(peer, cb, initial_state) {
     function isMajority(i) {
 	return i >= Math.floor(len(self.peers)/2) + 1
     }
-    
+
     function handleCallback(res) {
 	switch(res.status) {
 	case "error":

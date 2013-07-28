@@ -38,3 +38,30 @@
     right: 0;
     left: 0;
   }
+
+#search-results h2 {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.songs {
+  margin: 0;
+  padding: 10px;
+}
+
+.songs li {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.song:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.song img {
+  float: left;
+  margin-right: 10px;
+}
