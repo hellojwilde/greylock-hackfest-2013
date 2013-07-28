@@ -26,18 +26,19 @@ var dprm = angular.module('dprm', [], function ($provide) {
  */
 
 function NowCtrl($scope, SongService) {
-  //get/send a playing update
-  $scope.playing = {};
-  $scope.playing.name = "Nothing's playing!";
+  $scope.$parent.songPlaying = null;
 }
 
 function NextQueueCtrl($scope, SongService) {
-  // song list
+  $scope.$parent.songPlaying = null;
   $scope.songs = [];
-  $scope.songsById = {};
+  $scope.songsById = {}; // index for $scope.songs
 
-  $scope.observe = function (aAction, aData) {
+  SongService.addObserver(function (aAction, aData) {
     switch (aAction) {
+      case "play":
+        $scope.$parent.songPlaying = $scope.songsById[aData];
+        break;
       case "upvote":
         $scope.songsById[aData].votes++;
         break;
@@ -49,19 +50,32 @@ function NextQueueCtrl($scope, SongService) {
         $scope.$apply();
         break;
     }
-  };
-  SongService.addObserver($scope);
+  });
 }
 
 Dropzone.autoDiscover = false;
 function NextUploadCtrl($scope, SongService) {
+  var dropped = {};
+
   $scope.dropzone = new Dropzone("#uploader");
   $scope.dropzone.on("addedfile", function (aFile) {
+    var uuid = aFile.name;
+    aFile.status = Dropzone.SUCCESS;
+    dropped[uuid] = aFile;
+
     SongService.add({
-      uuid: aFile.name,
+      uuid: uuid,
       name: aFile.name,
       votes: 1
     });
-    aFile.status = Dropzone.SUCCESS;
+  });
+
+  SongService.addObserver(function (aAction, aData) {
+    switch (aAction) {
+      case "add":
+        var file = dropped[aData.uuid];
+        $scope.dropzone.removeFile(file);
+        break;
+    }
   });
 }

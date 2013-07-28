@@ -10,7 +10,6 @@
 }
 
 #now {
-  /*margin-top:10%;*/
   left: 0;
   right: 300px;
   background: #333;
@@ -43,21 +42,24 @@
 #next > ul {
   top: 0;
   bottom: 50px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 #next > footer {
   bottom: 0;
 }
 
-.song {
-  margin-top: 5%;
-  margin-bottom: 5%;
+#next li {
+  margin: 0;
+  padding: 20px;
 }
 
-li.empty {
+#next li.empty {
   color: #622;
 }
 
-#votes {
-  font-size: 150%;
+#next li .voting {
+  float: left;
 }
