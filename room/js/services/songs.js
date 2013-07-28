@@ -53,7 +53,7 @@ var Songs = function(){
           });
         });
         peer.on('open', function(){
-          client = new Raft(peer, rcvmsg);
+          client = new Raft(peer, rcvmsg, Raft.states.leader);
           console.log(client.id, id);
           client.join(id);
           client.send("hello!");
