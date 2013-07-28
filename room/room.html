@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" ng-app>
+<head>
+  <meta charset="utf-8"/>
+  <title>Room</title>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+</head>
+<body ng-controller="PlayerCtrl">
+  <section id="now">
+    <!-- Player goes here -->
+  </section>
+
+  <section id="next" ng-contoller="NextCtrl">
+    <header>
+      <input ng-model="search" ng-change="beginSearch()"/>
+      <button ng-show="isSearchActive()" ng-click="cancelSearch()">Cancel</button>
+    </header>
+
+    <div id="next-queue" ng-hide="isSearchActive()">
+      Q
+    </div>
+
+    <div id="next-search" ng-show="isSearchActive()">
+      Searching
+    </div>
+
+    <footer><button ng-click="upload()">Upload</button></footer>
+  </section>
+
+  <script>
+    function RoomCtrl($scope) {
+      // Logic for playing a song goes here
+      $scope.playing = {};
+    }
+
+    function NextCtrl($scope) {
+      /* ----------------------------------------------------------------------
+       * Search
+       */
+
+      $scope.search = "";
+      $scope.searchResults = [];
+
+      $scope.isSearchActive = function () {
+        return $scope.search.length > 0;
+      };
+
+      $scope.beginSearch = function () {
+        // TODO, async
+      };
+
+      $scope.cancelSearch = function () {
+        return $scope.search = "";
+      };
+
+      /* ----------------------------------------------------------------------
+       * Queue
+       */
+
+      $scope.queued = [];
+
+      /* ----------------------------------------------------------------------
+       * File Upload
+       */
+
+      $scope.upload = function () {
+        // TODO, should be sync
+      };
+    }
+  </script>
+</body>
+</html>
