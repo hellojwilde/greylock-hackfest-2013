@@ -228,7 +228,8 @@ function Raft(peer, cb) {
 
     function checkTerm(msg) {
 	if(msg.term < currentTerm) {
-	    console.log("reject old message")
+	    console.log("reject old message ("+currentTerm+" > "+msg.term+")", msg)
+	    send(msg.from, {type: "checkTerm"})
 	    return;
 	} else if(msg.term > currentTerm) {
 	    console.log("future term")
@@ -255,6 +256,9 @@ function Raft(peer, cb) {
 	    checkTerm(msg);
 	    handleVoteRequest(msg);
 	    break;
+	case "checkTerm":
+	    checkTerm(msg);
+	    break;
 	case "appendEntries":
 	    leader = msg.from;
 	    checkTerm(msg);
@@ -274,6 +278,7 @@ function Raft(peer, cb) {
 	    handleCallback(msg);
 	    break;
 	case "join":
+	    checkTerm(msg);
 	    join(msg.name)
 	    break;
 	default:
