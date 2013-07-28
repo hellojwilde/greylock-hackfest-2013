@@ -1,7 +1,34 @@
 var Songs = function(){
   var peer = null;
   var client = null;
-  return {
+  var rcvmsg = function (data) {
+    console.log('data: ', data);
+    if(data.action){
+      switch(data.action){
+        case "add":
+          console.log("adding");
+          retVal.add(data.obj);
+          break;
+        case "upvote":
+          console.log("upvoting");
+          retVal.upvote(data.uuid);
+          break;
+        case "downvote":
+          console.log("downvoting");
+          retVal.downvote(data.uuid);
+          break;
+        case "play":
+          console.log("playing");
+          retVal.play(data.uuid);
+          break;
+        default:
+          console.warn("unknown action");
+          break;
+      }
+    }
+  };
+
+  var retVal = {
     _songs: {},
 
     init: function () {
@@ -34,30 +61,28 @@ var Songs = function(){
       return this;
     },
 
-    add: function () {
+    add: function (obj) {
 
     },
 
-    upvote: function () {
+    upvote: function (uuid) {
 
     },
 
-    downvote: function () {
+    downvote: function (uuid) {
 
     },
 
-    enqueue: function () {
+    play: function (uuid) {
 
     },
 
-    play: function () {
-
-    },
-
-    receiveMessage: rcvmsg
+    sendMessage: function(action, uuid){
+      client.send({
+        action:action,
+        uuid:uuid
+      });
+    }
   };
+  return retVal;
 }();
-
-var rcvmsg = function (data) {
-  console.log('data: ', data);
-};
