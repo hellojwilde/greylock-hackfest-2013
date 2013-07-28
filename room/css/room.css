@@ -1,0 +1,32 @@
+#now, #next {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+
+#now {
+  left: 0;
+  right: 300px;
+  background: #333;
+}
+
+#next {
+  width: 300px;
+  right: 0;
+}
+
+  #queue, #search-results {
+    position: absolute;
+    overflow: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 40px;
+  }
+
+  #search-bar {
+    position: absolute;
+    bottom: 30px;
+    left: 0;
+    right: 0;
+  }
