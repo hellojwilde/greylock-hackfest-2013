@@ -9,32 +9,52 @@ function randBetween(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function Raft(peer, cb) {
+function Raft(peer, cb, initial_state) {
+    // the reason we allow the user to pass in the initial state here is that we want
+    // them to be able to be a leader in a group of one if there is actually only one person
+    // in the room. Normally you don't do this, since starting nodes as leaders and issuing
+    // commits to them before they join together would cause message loss.
+    // This is not a problem our case, since we can differentiate between a party of 1 vs a
+    // party of n plus 1 by whether or not we have the room_id name.
+    if(!initial_state)
+	initial_state = Raft.states.follower
+	
     var self = this;
     self.peer = peer;
     self.currentTerm = 0;
     self.log = [];
     self.votedFor;
     self.numVotes = 0;
-    self.state = Raft.states.follower;
-    self.leader = null;
+    self.state = initial_state;
     self.lastIndex = 0;
     self.commitIndex = 0;
     self.peers = {};
+    self.queue = []
 
     var baseElectionTimeout = 1000;
     var electionTimer;
 
     self.id = peer.id;
+    if(self.state == Raft.states.leader)
+	self.leader = self.id
+    else
+	self.leader = null;
     resetElectionTimeout();
+    
     peer.on('open', function(id) {
 	self.id = id;
+	if(self.state == Raft.states.leader)
+	    self.leader = self.id
+	else
+	    self.leader = null;
     })
-    
     peer.on('connection', function(conn) {
 	self.join(conn.peer, conn)
     })
-
+    window.addEventListener("unload", function() {
+	self.leave();
+    })
+    
     function send(name, msg) {
 	msg.term = self.currentTerm
 	msg.from = self.id
@@ -63,6 +83,25 @@ function Raft(peer, cb) {
 	}
     }
 
+    function flushMsgQueue() {
+	if(!self.leader)
+	    return;
+    
+	for(var m in self.queue) {
+	    msg = self.queue[m];
+	    
+	    if(self.state == Raft.states.leader)
+		self.leaderInsert({data: msg, from: self.id})
+	    else
+		// if we don't have a leader yet, queue up the message for later
+		self.sendto(self.leader, {type: "insert", data: msg});
+	}
+	self.queue = []
+    }
+    this.flushMsgQueue = flushMsgQueue
+    setInterval(this.flushMsgQueue, 500)
+
+    
     function beginElection() {
 	if(self.state == Raft.states.leader)
 	    return
@@ -98,9 +137,7 @@ function Raft(peer, cb) {
     function handleVoteRequest(msg) {
 	if(self.votedFor == null) {
 	    self.votedFor = msg.from;
-	    send(msg.from, {
-		type: "voteAck"
-	    });
+	    send(msg.from, {type: "voteAck"});
 	}
     }
 
@@ -114,6 +151,29 @@ function Raft(peer, cb) {
 	}
     }
 
+    function commit(id) {
+	var entry = self.log[id];
+	entry.committed = true;
+	self.commitIndex = id;
+	apply(self.log[id].msg);
+
+	if(self.state == Raft.states.leader)
+	    broadcast({
+		type: "commit",
+		commitIndex: self.commitIndex
+	    })
+	// todo: maybe send confirmation to original client.
+    }
+
+    function handleCommit(msg) {
+	for(; self.lastIndex < msg.commitIndex; self.lastIndex++)
+	    commit(self.lastIndex)
+    }
+
+    function isMajority(i) {
+	return i >= Math.floor(len(self.peers)/2) + 1
+    }
+    
     function handleCallback(res) {
 	switch(res.status) {
 	case "error":
@@ -122,19 +182,10 @@ function Raft(peer, cb) {
 	    break;
 	case "success":
 	    var entry = self.log[res.for];
-	    entry.servers_committed.push(res.from);
+	    entry.servers_responded.push(res.from);
 	    self.peers[res.from].nextId = res.for;
-	    if(!entry.committed && entry.servers_committed.length >= Math.floor(len(self.peers)/2) + 1) {
-		entry.committed = true;
-		self.commitIndex = res.for;
-		apply(res.msg);
-		
-		broadcast({
-		    type: "commit",
-		    commitIndex: self.commitIndex
-		})
-		// todo: maybe send confirmation to original client.
-	    }
+	    if(!entry.committed && isMajority(entry.servers_responded.length))
+		commit(res.for)
 	    break;
 	}
     }
@@ -144,11 +195,15 @@ function Raft(peer, cb) {
 	    return;
 
 	self.log[self.lastIndex] = {
-	    servers_committed: [self.id],
+	    servers_responded: [self.id],
 	    term: self.currentTerm,
 	    committed: false,
 	    msg: request
 	}
+
+	// if we're a majority, we can just commit the message
+	if(isMajority(1))
+	    commit(self.lastIndex)
 
 	for(var clientId in self.peers) {
 	    var peer = self.peers[clientId]
@@ -184,7 +239,7 @@ function Raft(peer, cb) {
 	    for(var idx in msg.entries) {
 		var entry = msg.entries[idx];
 		self.log[entry.id] = {
-		    servers_committed: [msg.from],
+		    servers_responded: [msg.from],
 		    committed: false,
 		    msg: entry.msg
 		};
@@ -200,15 +255,6 @@ function Raft(peer, cb) {
 	// we handle commit separately in a separate message as an optimization,
 	// but handle it again here, just in case the message gets dropped or whatever
 	handleCommit(msg)
-    }
-
-    function handleCommit(msg) {
-	for(; self.lastIndex < msg.commitIndex; self.lastIndex++) {
-	    self.log[self.lastIndex].committed = true;
-	    self.log[self.lastIndex].servers_committed.push(self.id)
-	    apply(self.log[self.lastIndex].msg);
-	    self.commitIndex = self.lastIndex;
-	}
     }
 
     function ping() {
@@ -307,17 +353,16 @@ Raft.prototype.join = function(client_name, conn) {
 }
 
 Raft.prototype.send = function(msg) {
-    if(this.state == Raft.states.leader) {
-	this.leaderInsert({data: msg, from: this.id})
-    } else {
-	this.sendto(this.leader, {type: "insert", data: msg});
-    }
+    this.queue.push(msg)
+    if(!this.leader)
+	return;
+
+    this.flushMsgQueue();
 }
 
 Raft.prototype.leave = function() {
     this.stopElectionTimeout();
     this.peer.destroy()
-    for(var idx in this.peers) {
+    for(var idx in this.peers)
 	delete this.peers[idx]
-    }
 }

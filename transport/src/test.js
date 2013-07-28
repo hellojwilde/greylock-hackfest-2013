@@ -2,7 +2,8 @@ var id = "" + randBetween(0,100);
 
 cfg = {
     host: 'ec2-54-215-180-78.us-west-1.compute.amazonaws.com',
-    port: 9000
+    port: 9000,
+    reliable: true
 }
 var client;
 var peer = new Peer(null, cfg);
@@ -20,7 +21,3 @@ peer.on("open", function() {
 
 // client.join(room_id)
 // client.send(msg)
-
-window.onunload = function(){
-    client.leave()
-}
