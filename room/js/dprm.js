@@ -1,6 +1,6 @@
 var dprm = angular.module('dprm', [], function ($provide) {
   /* Song storage backends. */
-  $provide.factory('SongService', () => Songs.init());
+  $provide.factory('SongService', Songs.init);
 
   /* Individual search backends. */
   $provide.factory('SongSearchService', SongSearch.init);
@@ -26,7 +26,7 @@ function NowCtrl($scope) {
   $scope.song = null;
 }
 
-function NextCtrl($scope) {
+function NextCtrl($scope, SongService) {
   $scope.isSearching = false;
 }
 

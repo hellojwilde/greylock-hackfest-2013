@@ -38,43 +38,6 @@ dprm.directive('song', function () {
   }
 });
 
-dprm.factory('$songs', function () {
-  var Songs = {
-    _songs: {},
-
-    init: function () {
-
-    },
-
-    add: function () {
-
-    },
-
-    upvote: function () {
-
-    },
-
-    downvote: function () {
-
-    },
-
-    enqueue: function () {
-
-    },
-
-    play: function () {
-
-    },
-
-    receiveMessage: function () {
-
-    }
-  };
-
-  Songs.init();
-  return Songs;
-});
-
 /**
  * schema for a song:
  * {
@@ -166,7 +129,7 @@ function NowCtrl($scope) {
   $scope.song = null;
 }
 
-function NextCtrl($scope) {
+function NextCtrl($scope, SongService) {
   $scope.isSearching = false;
 }
 

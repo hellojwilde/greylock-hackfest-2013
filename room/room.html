@@ -4,14 +4,10 @@
   <meta charset="utf-8"/>
   <title>Room</title>
 
-<<<<<<< HEAD
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.js"></script>
- <!-- <script src="http://connect.soundcloud.com/sdk.js"></script>-->
-=======
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
   <script src="http://connect.soundcloud.com/sdk.js"></script>
+  <script src="http://cdn.peerjs.com/0/peer.min.js"></script>
   <link rel='stylesheet' href='css/dropzone-basic.css'/>
->>>>>>> 944b8625e101b63ad561202b6fd2b6835d4790eb
 </head>
 <body>
   <section id="now" ng-controller="NowCtrl">
@@ -35,27 +31,24 @@
       </div>
     </div>
 
-    <div id="upload" ng-controller="NextUploadCtrl">
-      <!-- form+form action is necessary for dropzone auto-detection-->
+<!--     <div id="upload" ng-controller="NextUploadCtrl">
       <form action="/foo" class="dropzone" id="uploader">
         <div class="fallback">
           <input name="file" type="file" multiple />
         </div>
       </form>
       <button ng-click="upload()">Upload</button>
-    </div>
+    </div> -->
   </section>
 
   <script src="js/zepto.min.js"></script>
   <script src="js/when.js"></script>
-<<<<<<< HEAD
 
-=======
   <script src="js/dropzone.js"></script>
->>>>>>> 944b8625e101b63ad561202b6fd2b6835d4790eb
   <script src="js/dprm.js"></script>
   <script src="js/services/search.js"></script>
   <script src="js/services/songs.js"></script>
+  <script src="../transport/src/raft.js"></script>
 
    <script src="js/components/song.js"></script>
 </body>
