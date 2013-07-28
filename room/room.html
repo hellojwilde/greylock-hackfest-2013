@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" ng-app>
+<html lang="en" ng-app="dprm">
 <head>
   <meta charset="utf-8"/>
   <title>Room</title>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+  <script src="js/room.js"></script>
 </head>
 <body>
   <section id="now" ng-controller="NowCtrl">
@@ -12,48 +13,24 @@
   </section>
 
   <section id="next" ng-controller="NextCtrl">
-    <header>
-      <input ng-model="search" ng-change="modifySearch()"/>
-      <button ng-show="isSearching">Cancel</button>
-    </header>
-
-    <ul id="queue" ng-hide="isSearching">
-      <li ng-repeat="song in queue()">
-        <img src="{{song.thumbnail}}" alt="{{song.name}}"/>
-        <p class="name">{{song.name}}</p>
-
-        <div class="voting">
-          <div class="voting-buttons" ng-hide="{{song.haveVoted}}">
-            <button class="voting-up" ng-click="upvote({{song.uuid}})">Up</button>
-            <button class="voting-down" ng-click="downvote({{song.uuid}})">Down</button>
-          </div>
-          <p class="votes">{{song.votes}}</p>
-        </div>
-      </li>
+    <ul id="queue" ng-hide="isSearching" ng-controller="NextQueueCtrl">
+      <li ng-repeat="queued in queue()"><song bound-song="queued"/></li>
     </ul>
 
-    <ul id="results" ng-show="isSearching"
-      <li ng-repeat="item in results">
-        <img src="{{song.thumbnail}}" alt="{{song.name}}"/>
-        <p class="name">{{song.name}}</p>
+    <div id="search" ng-controller="NextSearchCtrl">
+      <ul id="results" ng-show="isSearching">
+        <li ng-repeat="result in results"><song bound-song="result"/></li>
+      </ul>
 
-        <div class="voting" ng-show="{{song.isQueued}}">
-          <div class="voting-buttons" ng-hide="{{song.haveVoted}}">
-            <button class="voting-up">Up</button>
-            <button class="voting-down">Down</button>
-          </div>
-          <p class="votes">{{song.votes}}</p>
-        </div>
+      <div id="search-bar">
+        <input ng-model="queryText" ng-change="editSearch()"/>
+        <button ng-show="isSearching" ng-click="endSearch()">Cancel</button>
+      </div>
+    </div>
 
-        <div class="queuing" ng-hide="{{song.isQueued}}">
-          <button class="queue" ng-click="enqueue({{song}})">Add to Queue</button>
-        </div>
-      </li>
-    </ul>
-
-    <footer><button ng-click="upload()">Upload</button></footer>
+    <button ng-click="upload()">Upload</button>
   </section>
 
-  <script src="js/room.js"></script>
+
 </body>
 </html>

@@ -36,7 +36,7 @@ function Raft(peer, cb) {
 	msg.term = self.currentTerm
 	msg.from = self.id
 	var peer = self.peers[name]
-	if(peer.conn.open)
+	if(peer && peer.conn.open)
 	    peer.conn.send(JSON.stringify(msg))
     }
     this.sendto = send
@@ -44,16 +44,20 @@ function Raft(peer, cb) {
     function broadcast(msg) {
 	for(var idx in self.peers) {
 	    var peer = self.peers[idx]
-	    if(peer.name != self.id) {
-		send(peer.name, msg)
-	    }
+	    send(peer.name, msg)
 	}
     }
     this.broadcast = broadcast
 
     function apply(msg) {
-	if(msg != "")
-	    cb(msg)
+	switch(msg.data) {
+	case "":
+	    // do nothing on a ping.
+	    break;
+	default:
+	    cb(msg.data, msg.from)
+	    break;
+	}
     }
 
     function beginElection() {
@@ -75,6 +79,7 @@ function Raft(peer, cb) {
 	if(electionTimer)
 	    clearInterval(electionTimer)
     }
+    this.stopElectionTimeout = stopElectionTimeout
 
     function startElectionTimeout() {
 	// restart timer at a random interval to prevent infinite recovery rounds.
@@ -120,6 +125,7 @@ function Raft(peer, cb) {
 		entry.committed = true;
 		self.commitIndex = res.for;
 		apply(res.msg);
+		
 		broadcast({
 		    type: "commit",
 		    commitIndex: self.commitIndex
@@ -143,9 +149,6 @@ function Raft(peer, cb) {
 
 	for(var clientId in self.peers) {
 	    var peer = self.peers[clientId]
-	    if(peer.name == self.id)
-		continue
-
 	    var entries = []
 	    for(var i = peer.nextId+1; i <= self.lastIndex; i++)
 		if(self.log[i])
@@ -154,6 +157,7 @@ function Raft(peer, cb) {
 	    send(clientId, {
 		type: "appendEntries",
 		prevLogIndex: peer.nextId,
+		commitIndex: self.commitIndex,
 		entries: entries,
 		request: request
 	    })
@@ -190,6 +194,9 @@ function Raft(peer, cb) {
 		})
 	    }
 	}
+	// we handle commit separately in a separate message as an optimization,
+	// but handle it again here, just in case the message gets dropped or whatever
+	handleCommit(msg)
     }
 
     function handleCommit(msg) {
@@ -202,10 +209,9 @@ function Raft(peer, cb) {
     }
 
     function ping() {
-	leaderInsert("")
+	leaderInsert({from:self.id, data:""})
     }
     setInterval(ping, baseElectionTimeout / 2);
-
 
     function checkTerm(msg) {
 	if(msg.term < self.currentTerm) {
@@ -253,7 +259,7 @@ function Raft(peer, cb) {
 	    handleVoteAck(msg);
 	    break;
 	case "insert":
-	    leaderInsert(msg.data);
+	    leaderInsert({data: msg.data, from: msg.from});
 	    break;
 	case "res":
 	    handleCallback(msg);
@@ -277,12 +283,16 @@ Raft.states = {
 }
 
 Raft.prototype.join = function(client_name, conn) {
-    if(this.peers[client_name])
+    if(this.peers[client_name] || client_name == this.id)
 	return
 
     if(!conn)
 	conn = this.peer.connect(client_name)
     conn.on('data', this.receive);
+    var self = this;
+    conn.on('close', function() {
+	delete self.peers[conn.peer];
+    })
 
     this.broadcast({type: "join", name: client_name})
 
@@ -295,8 +305,16 @@ Raft.prototype.join = function(client_name, conn) {
 
 Raft.prototype.send = function(msg) {
     if(this.state == Raft.states.leader) {
-	this.leaderInsert(msg)
+	this.leaderInsert({data: msg, from: this.id})
     } else {
 	this.sendto(this.leader, {type: "insert", data: msg});
+    }
+}
+
+Raft.prototype.leave = function() {
+    this.stopElectionTimeout();
+    this.peer.destroy()
+    for(var idx in this.peers) {
+	delete this.peers[idx]
     }
 }
