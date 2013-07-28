@@ -121,10 +121,10 @@ function addSongData(uuid, data) {
 
 var playBtnState;
 var playIdx = 0;
+var aud = $('#audio');
 
 function justPlay() {
   theSongs.sort(function(a,b) { return b.votes > a.votes; });
-  var aud = $('#audio');
   if (playIdx > theSongs.length) playIdx = 0;
   aud.attr('src', URL.createObjectURL(songDataCollection[theSongs[playIdx].uuid]));
   aud[0].play();
