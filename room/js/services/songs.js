@@ -19,12 +19,10 @@ var Songs = {
     console.log('connecting: ', this._peer);
 
     this._peer.on('error', function(err) {
-      console.log(err);
       this._peer = new Peer(null, cfg);
 
-      console.log('that failed: now to ', this._peer);
       this._peer.on('open', function(){
-        this._client = new Raft(this._peer, this);
+        this._client = new Raft(this._peer, this._handleRaftMessage.bind(this));
         console.log(this._client.id, id);
         this._client.join(id);
 
