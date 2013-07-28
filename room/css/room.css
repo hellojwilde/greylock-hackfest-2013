@@ -1,7 +1,11 @@
-/*body {
+body {
   background-color: #ddd;
   color: #666;
-}*/
+}
+
+li {
+    list-style: none;
+}
 
 #now, #next {
   position: absolute;
@@ -10,7 +14,6 @@
 }
 
 #now {
-  /*margin-top:10%;*/
   left: 0;
   right: 300px;
   background: #333;
@@ -49,9 +52,23 @@
   bottom: 0;
 }
 
-.song {
-  margin-top: 5%;
-  margin-bottom: 5%;
+.name {
+    margin-left:20%;
+    margin-bottom:20%;
+}
+
+.voting {
+    position: absolute;
+    width: 1em;
+    padding-left:-20%;
+    margin-top:-3.75em;
+    font-size:150%;
+    margin-right: 20%:
+}
+.votes {
+    position: absolute;
+    margin-left: -120%;
+    margin-top: -1.75em;
 }
 
 li.empty {
@@ -59,5 +76,5 @@ li.empty {
 }
 
 #votes {
-  font-size: 150%;
+  font-size: 50%;
 }
