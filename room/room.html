@@ -3,27 +3,53 @@
 <head>
   <meta charset="utf-8"/>
   <title>Room</title>
-
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
 </head>
 <body>
   <section id="now" ng-controller="NowCtrl">
-    <!-- Player goes here -->
+    <img src="{{playing.thumbnail}}" alt="{{playing.name}}"/>
+    <p class="now-name">{{playing.name}}</p>
   </section>
 
   <section id="next" ng-controller="NextCtrl">
     <header>
       <input ng-model="search" ng-change="beginSearch()"/>
-      <button ng-show="isSearchActive()" ng-click="cancelSearch()">Cancel</button>
+      <button ng-show="isSearching()">Cancel</button>
     </header>
 
-    <div id="next-queue" ng-hide="isSearchActive()">
-      Queue
-    </div>
+    <ul class="next-list" id="next-queue" ng-hide="isSearching()">
+      <li ng-repeat="song in queue()">
+        <img src="{{song.thumbnail}}" alt="{{song.name}}"/>
+        <p class="name">{{song.name}}</p>
 
-    <div id="next-search" ng-show="isSearchActive()">
-      Searching
-    </div>
+        <div class="voting">
+          <div class="voting-buttons" ng-hide="{{song.haveVoted}}">
+            <button class="voting-up" ng-click="upvote({{song.uuid}})">Up</button>
+            <button class="voting-down" ng-click="downvote({{song.uuid}})">Down</button>
+          </div>
+          <p class="votes">{{song.votes}}</p>
+        </div>
+      </li>
+    </ul>
+
+    <ul id="next-results">
+      <li ng-repeat="item in results">
+        <img src="{{song.thumbnail}}" alt="{{song.name}}"/>
+        <p class="name">{{song.name}}</p>
+
+        <div class="voting" ng-show="{{song.isQueued}}">
+          <div class="voting-buttons" ng-hide="{{song.haveVoted}}">
+            <button class="voting-up">Up</button>
+            <button class="voting-down">Down</button>
+          </div>
+          <p class="votes">{{song.votes}}</p>
+        </div>
+
+        <div class="queuing" ng-hide="{{song.isQueued}}">
+          <button class="queue" ng-click="enqueue({{song}})">Add to Queue</button>
+        </div>
+      </li>
+    </ul>
 
     <footer><button ng-click="upload()">Upload</button></footer>
   </section>

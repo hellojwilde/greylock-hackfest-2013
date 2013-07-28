@@ -12,46 +12,41 @@
  * }
  */
 
-function SongsCtrl($scope) {
-  $scope.songs = {};
-
-  // XXX set up raft here
-};
-
 function NowCtrl($scope) {
-  // XXX player code here
+  //code
 }
 
 function NextCtrl($scope) {
-  $scope.isSearching = false;
-}
+  $scope.queue = function () {
+    // XXX put real data here
+    return [
+      {
+        uuid: "fasdf",
+        name: "test song",
+        isQueued: true,
+        votes: 4,
+        haveVoted: true
+      },
+      {
+        uuid: "fasdf",
+        name: "test song 43",
+        isQueued: true,
+        votes: 2,
+        haveVoted: false
+      }
+    ];
+  };
 
-function QueueCtrl($scope) {
-  $scope.getItems = function () {
-    let items = [];
+  $scope.query = "";
+  $scope.isSearching = function () {
+    return $scope.query.length > 0;
+  };
 
-  }
-};
-
-function SearchCtrl($scope) {
-  $scope.search = "";
   $scope.searchResults = [];
-
-  $scope.isSearchActive = function () {
-    return $scope.search.length > 0;
-  }
-
   $scope.beginSearch = function () {
-    // TODO async
+    $scope.query = "";
   };
-
-  $scope.cancelSearch = function () {
-    $scope.search = "";
-
-    // TODO async
+  $scope.endSearch = function () {
+    $scope.query = "";
   };
-}
-
-function UploadCtrl($scope) {
-
 }
