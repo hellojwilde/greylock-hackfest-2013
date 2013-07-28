@@ -60,8 +60,7 @@
   background: #333;
 }
 
-
-@keyframes {
+@keyframes pulse {
   0% { background: #333; }
   20% { background: #1B697F; }
   40% { background: #36D2FF; }
