@@ -37,7 +37,7 @@ var Songs = {
   },
 
   fireObserver: function (aAction, aData) {
-    this._observers.forEach((aObserver) => aObserver(aAction, aData));
+    this._observers.forEach(function(aObserver){ aObserver(aAction, aData) });
   },
 
   add: function (aSong) {
