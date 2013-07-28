@@ -73,13 +73,17 @@ function Raft(peer, cb, initial_state) {
     this.broadcast = broadcast
 
     function apply(msg) {
-	switch(msg.data) {
-	case "":
-	    // do nothing on a ping.
-	    break;
-	default:
-	    cb(msg.data, msg.from)
-	    break;
+	try {
+	    switch(msg.data) {
+	    case "":
+		// do nothing on a ping.
+		break;
+	    default:
+		cb(msg.data, msg.from)
+		break;
+	    }
+	} catch(e) {
+	    console.error(e)
 	}
     }
 
@@ -112,7 +116,7 @@ function Raft(peer, cb, initial_state) {
 	self.votes = {}
 	self.votes[self.id] = true
 	self.state = Raft.states.candidate;
-	self.votedFor = self.id;
+ 	self.votedFor = self.id;
 	resetElectionTimeout();
 
 	broadcast({type: "requestVote"})
@@ -158,7 +162,7 @@ function Raft(peer, cb, initial_state) {
 	    console.log("missing log entry for", id)
 	    return;
 	}
-	
+
 	var entry = self.log[id];
 	entry.committed = true;
 	self.commitIndex = id;
