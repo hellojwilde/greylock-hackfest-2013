@@ -13,21 +13,24 @@
 </head>
 <body>
   <section id="now" ng-controller="NowCtrl">
-    <div class="song"><div class="song-inner">
-      <img src="{{playing.thumbnail}}" alt="{{playing.name}}"/>
-      <p class="now-name">{{playing.name}}</p>
-    </div>            </div>
+    <div class="song">
+      <div class="song-inner">
+        <audio id="audio" controls></audio>
+        <img src="{{playing.thumbnail}}" alt="{{playing.name}}"/>
+        <p class="now-name">{{playing.name}}</p>
+      </div>
+    </div>
   </section>
 
-  <section id="next" ng-controller="NextCtrl">
-    <ul>
+  <section id="next">
+    <ul ng-controller="NextQueueCtrl">
       <li ng-repeat="song in songs"><song bound-song="song"/></li>
       <li ng-show="!songs.length">
         There's no songs in the room.
       </li>
     </ul>
 
-    <footer>
+    <footer ng-controller="NextUploadCtrl">
       <form action="/foo" class="dropzone" id="uploader">
         <div class="fallback"><input name="file" type="file" multiple /></div>
       </form>
