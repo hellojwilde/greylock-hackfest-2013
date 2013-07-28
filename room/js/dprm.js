@@ -35,6 +35,7 @@ var theSongs;
 
 function NextQueueCtrl($scope, SongService) {
   $scope.$parent.songPlaying = null;
+  $scope.$parent.isQueue = false;
   $scope.songs = [];
   theSongs = $scope.songs; // XXX let this escape the fn
   $scope.songsById = {}; // index for $scope.songs
@@ -53,6 +54,7 @@ function NextQueueCtrl($scope, SongService) {
       case "add":
         if (!$scope.songsById[aData.uuid]) {
           $scope.songs.push($scope.songsById[aData.uuid] = aData);
+          $scope.$parent.isQueue = true;
         }
         break;
     }
