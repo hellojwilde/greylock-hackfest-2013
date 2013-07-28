@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" ng-app>
+<head>
+  <meta charset="utf-8"/>
+  <title>Room</title>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+</head>
+<body ng-controller="PlayerCtrl">
+  <section id="now">
+    <!-- Player goes here -->
+  </section>
+
+  <section id="next" ng-controller="NextCtrl">
+    <header>
+      <input ng-model="search" ng-change="beginSearch()"/>
+      <button ng-show="isSearchActive()" ng-click="cancelSearch()">Cancel</button>
+    </header>
+
+    <div id="next-queue" ng-hide="isSearchActive()">
+      Queue
+    </div>
+
+    <div id="next-search" ng-show="isSearchActive()">
+      Searching
+    </div>
+
+    <footer><button ng-click="upload()">Upload</button></footer>
+  </section>
+
+  <script>
+    /**
+     * schema for a song:
+     * {
+     *   uuid: <String>,
+     *   name: <String>,
+     *   thumbnail: <String>, (data: url)
+     *   isQueued: <Boolean>,
+     *   votes: <Number>,
+     *   haveVoted: <Boolean>,
+     *   sourceType: <String> ["peer"|"youtube"|"soundcloud"],
+     *   source: <String> (URL or computer ID)
+     * }
+     */
+
+    var Songs = {
+      _songs: {},
+
+      get queue() {
+        return _.filter(this._songs, function (aSong) {
+
+        });
+      },
+
+      init: function () {
+        // XXX setup raft stuff here
+      },
+
+      add: function (aSong) {
+        this._songs[aSong.uuid] = aSong;
+        // XXX fire event?
+      },
+
+      vote: function (aUUID, aOffset) {
+        if (test) {
+          //code
+        }
+      }
+    };
+/*
+    var : function (aSearchQuery) {
+        var deferred = when.defer();
+
+        // XXX search the local database here
+
+        return deferred.promise;
+      },
+
+    var YouTubeSongs = {
+      search: function (aSearchQuery) {
+        var deferred = when.defer();
+
+        // XXX do a search on the youtube api here
+
+        return deferred.promise;
+      }
+    };
+
+    var SoundCloudSongs = {
+      search: function (aSearchQuery) {
+        var deferred = when.defer();
+
+        // XXX do a search on the soundcloud api here
+
+        return deferred.promise;
+      }
+    };
+*/
+    function PlayerCtrl($scope) {
+      $scope.playing = {};
+    }
+
+    function NextCtrl($scope) {
+      /* ----------------------------------------------------------------------
+       * Search
+       */
+
+      $scope.search = "";
+      $scope.searchResults = [];
+
+      $scope.isSearchActive = function () {
+        return $scope.search.length > 0;
+      }
+
+      $scope.beginSearch = function () {
+        // TODO async
+      };
+
+      $scope.cancelSearch = function () {
+        $scope.search = "";
+
+        // TODO async
+      };
+
+      /* ----------------------------------------------------------------------
+       * Queue
+       */
+
+      $scope.queued = [];
+
+      /* ----------------------------------------------------------------------
+       * File Upload
+       */
+
+      $scope.upload = function () {
+        // TODO, should be sync
+      };
+    }
+  </script>
+</body>
+</html>
