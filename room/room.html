@@ -29,14 +29,27 @@
   </section>
 
   <script>
-    var PeerSongs = {
+    /**
+     * schema for a song:
+     * {
+     *   uuid: <String>,
+     *   name: <String>,
+     *   thumbnail: <String>, (data: url)
+     *   votes: <Number>,
+     *   haveVoted: <Boolean>,
+     *   sourceType: <String> ["peer"|"youtube"|"soundcloud"],
+     *   source: <String> (URL or computer ID)
+     * }
+     */
+
+    var Songs = {
       _songs: {},
 
       init: function () {
         // XXX setup raft stuff here
       },
 
-      add: function (aID, aSong) {
+      add: function (aSong) {
 
       },
 
@@ -51,6 +64,16 @@
 
         return deferred.promise;
       }
+    };
+
+    var Queue = {
+      _songs: {},
+
+      init: function () {
+
+      },
+
+
     };
 
     var YouTubeSongs = {
