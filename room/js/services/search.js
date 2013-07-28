@@ -8,7 +8,7 @@ var SongSearch = {
   search: function (aQueryString) {
     var deferred = when.defer();
 
-    setTimeout(() => deferred.resolve([]), 0);
+    setTimeout(function() { deferred.resolve([]) }, 0);
 
     return deferred.promise;
   }
