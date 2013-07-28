@@ -58,13 +58,11 @@ var Songs = {
   },
 
   upvote: function (uuid) {
-    this.songs[uuid].votes++;
     this.songs[uuid].haveVoted = true;
     this._sendMessage("upvote", uuid);
   },
 
   downvote: function (uuid) {
-    this.songs[uuid].votes--;
     this.songs[uuid].haveVoted = true;
     this._sendMessage("downvote", uuid);
   },
