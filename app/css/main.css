@@ -1,8 +1,16 @@
 body {
-    background-color:#444;
-    color:#ddd;
+    background-color:#ddd;
+    color:#666;
     text-align:center;
     margin-top:10%;
+}
+
+h1 {
+     color: #222;
+}
+
+h3 {
+    color: #444;
 }
 
 input[type=text] {

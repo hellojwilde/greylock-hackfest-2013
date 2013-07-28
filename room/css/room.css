@@ -1,6 +1,6 @@
 /*body {
-  background-color: #333;
-  color: #ddd;
+  background-color: #ddd;
+  color: #666;
 }*/
 
 #now, #next {
@@ -49,14 +49,14 @@
   bottom: 0;
 }
 
-.song-li {
+.song {
   margin-top: 5%;
   margin-bottom: 5%;
 }
 
-/*#empty-q {
-  color: #fbb;
-}*/
+li.empty {
+  color: #622;
+}
 
 #votes {
   font-size: 150%;
