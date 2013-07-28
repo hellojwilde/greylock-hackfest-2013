@@ -25,15 +25,18 @@ var dprm = angular.module('dprm', [], function ($provide) {
  * }
  */
 
-function NowCtrl($scope) {
+function NowCtrl($scope, SongService) {
+  //get/send a playing update
   $scope.song = null;
 }
 
 function NextCtrl($scope, SongService) {
+  //send an add update
   $scope.isSearching = false;
 }
 
-function NextQueueCtrl($scope) {
+function NextQueueCtrl($scope, SongService) {
+  //get/send queue updates
   $scope.queue = function () {
     // XXX pull from service
     return [];
