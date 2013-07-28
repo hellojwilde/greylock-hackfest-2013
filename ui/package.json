@@ -4,6 +4,7 @@
     "version": "0.0.1",
     "dependencies": {
         "ember": ">= 1.0",
-        "peerjs": "*"
+        "peerjs": "*",
+        "when": "*"
     }
 }
