@@ -3,11 +3,9 @@
 <head>
   <meta charset="utf-8"/>
   <title>Room</title>
+
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
   <script src="http://connect.soundcloud.com/sdk.js"></script>
-  <script src="js/zepto.min.js"></script>
-  <script src="js/when.js"></script>
-  <script src="js/room.js"></script>
 </head>
 <body>
   <section id="now" ng-controller="NowCtrl">
@@ -35,5 +33,12 @@
       <button ng-click="upload()">Upload</button>
     </div>
   </section>
+
+  <script src="js/zepto.min.js"></script>
+  <script src="js/when.js"></script>
+  <script src="js/dprm.js"></script>
+  <script src="js/components/song.js"></script>
+  <script src="js/services/search.js"></script>
+  <script src="js/services/songs.js"></script>
 </body>
 </html>
