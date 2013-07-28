@@ -128,11 +128,13 @@ $('#play').click(function() {
     var aud = $('#audio');
     aud.attr('src', URL.createObjectURL(songDataCollection[theSongs[playIdx].uuid]));
     aud[0].play();
+    $("#now").attr("playing", "true");
     $('#play').text('Pause that music >:(');
     playBtnState = 'PLAY';
   } else {
     var aud = $('#audio');
     aud[0].pause();
+    $("#now").attr("playing", "false");
     $('#play').text('Play that music');
     playBtnState = 'PAUSE';
   }

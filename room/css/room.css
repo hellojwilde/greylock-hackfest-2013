@@ -60,6 +60,23 @@
   background: #333;
 }
 
+
+@keyframes {
+  0% { background: #333; }
+  20% { background: #1B697F; }
+  40% { background: #36D2FF; }
+  60% { background: #299DBF; }
+  80% { background: #0E3440; }
+  100% { background: #333; }
+}
+
+#now[playing="true"] {
+  animation-name: pulse;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
+
+
 #now h1 {
   position: absolute;
   top: 0;
