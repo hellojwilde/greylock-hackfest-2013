@@ -152,6 +152,11 @@ function Raft(peer, cb, initial_state) {
     }
 
     function commit(id) {
+	if(!self.log[id]) {
+	    console.log("missing log entry for", id)
+	    return;
+	}
+	
 	var entry = self.log[id];
 	entry.committed = true;
 	self.commitIndex = id;

@@ -37,7 +37,6 @@ function NextQueueCtrl($scope, SongService) {
   $scope.songsById = {};
 
   $scope.observe = function (aAction, aData) {
-    console.log(aData);
     switch (aAction) {
       case "upvote":
         $scope.songsById[aData].votes++;
@@ -47,10 +46,9 @@ function NextQueueCtrl($scope, SongService) {
         break;
       case "add":
         $scope.songs.push($scope.songsById[aData.uuid] = aData);
+        $scope.$apply();
         break;
     }
-
-    $scope.$apply();
   };
   SongService.addObserver($scope);
 }
