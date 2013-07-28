@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]>    <html class="no-js iem7" ng-app> <![endif]-->
+<!--[if (gt IEMobile 7)|!(IEMobile)]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>DPRM</title>
+    <meta name="description" content="Discover music with your friends.">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="cleartype" content="on">
+
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/main.css">
+
+    <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+  </head>
+  <body>
+    <section id="player">
+      <x-song id="now-playing"/>
+
+      <section id="player-queue">
+        <!-- songs are added here -->
+      </section>
+
+      <button id="player-add">Add Song</button>
+    </section>
+
+    <section id="adder">
+      <header>
+        <input type="search" id="adder-search"/>
+      </header>
+
+      <section id="adder-results">
+
+      </section>
+
+      <footer>
+
+      </footer>
+    </section>
+
+    <script type="text/x-template" id="tpl-song">
+      <div class="voting">
+        <button class="voting-up">Upvote</button>
+        <button class="voting-down">Downvote</button>
+        <p class="voting-votes"></p>
+      </div>
+
+      <div class="add">
+        <button class="add">Add to Queue</button>
+      </div>
+
+      <img class="song-thumb"/>
+      <p class="song-name"></p>
+      <p class="song-album"></p>
+    </script>
+
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+    <!--<script>
+        var _gaq=[["_setAccount","UA-XXXXX-X"],["_trackPageview"]];
+        (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
+        g.src=("https:"==location.protocol?"//ssl":"//www")+".google-analytics.com/ga.js";
+        s.parentNode.insertBefore(g,s)}(document,"script"));
+    </script> -->
+  </body>
+</html>
