@@ -1,7 +1,7 @@
-body {
+/*body {
   background-color: #ddd;
   color: #666;
-}
+}*/
 
 #now, #next {
   position: absolute;
@@ -10,7 +10,7 @@ body {
 }
 
 #now {
-  margin-top:10%;
+  /*margin-top:10%;*/
   left: 0;
   right: 300px;
   background: #333;
@@ -49,12 +49,12 @@ body {
   bottom: 0;
 }
 
-.song-li {
+.song {
   margin-top: 5%;
   margin-bottom: 5%;
 }
 
-#empty-q {
+li.empty {
   color: #622;
 }
 

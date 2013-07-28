@@ -8,26 +8,29 @@
   <script src="http://connect.soundcloud.com/sdk.js"></script>
   <script src="http://cdn.peerjs.com/0/peer.min.js"></script>
 
-  <link rel='stylesheet' href='../assets/foundation/css/foundation.css'>
+  <!--<link rel='stylesheet' href='../assets/foundation/css/foundation.css'>-->
   <link rel='stylesheet' href='css/dropzone-basic.css'/>
   <link rel='stylesheet' href='css/room.css'/>
-
 </head>
 <body>
   <section id="now" ng-controller="NowCtrl">
-    <div class="song"><div class="song-inner">
-      <img src="{{playing.thumbnail}}" alt="{{playing.name}}"/>
-      <p class="now-name">{{playing.name}}</p>
-    </div>            </div>
+    <div class="song">
+      <div class="song-inner">
+        <audio id="audio" controls></audio>
+        <img src="{{playing.thumbnail}}" alt="{{playing.name}}"/>
+        <p class="now-name">{{playing.name}}</p>
+      </div>
+    </div>
   </section>
 
-  <section id="next" ng-controller="NextCtrl">
-    <ul ng-repeat="song in songs">
-      <li class="song-li"><song bound-song="song"/></li>
+  <section id="next">
+    <ul ng-controller="NextQueueCtrl">
+      <li ng-repeat="song in songs"><song bound-song="song"/></li>
+      <li class="empty" ng-show="!songs.length">There's no songs in the room.</p>
     </ul>
-    <p id="empty-q" ng-show="!songs.length">There's no songs in the room.</p>
 
-    <footer>
+
+    <footer ng-controller="NextUploadCtrl">
       <form action="/foo" class="dropzone" id="uploader">
         <div class="fallback"><input name="file" type="file" multiple /></div>
       </form>

@@ -1,94 +1,95 @@
-var Songs = (function() {
-  observers = []
-  peer = null
-  client = null
-  songs = {}
+var Songs = {
+  _observers: [],
+  _peer: null,
+  _client: null,
 
-  var _sendMessage = function (action, data) {
-    client.send({
-      action: action,
-      data: data
-    });
-  }
+  init: function () {
+    var urlArr = window.location.toString().split('/');
+    var id = urlArr[urlArr.length-1];
+    id = id.replace('.','-');
 
-  var _handleRaftMessage = function (data) {
-    console.log('data: ', data);
-    for(var o in observers)
-	observers[o](data)
-  }
+    var cfg = {
+      host: 'ec2-54-215-180-78.us-west-1.compute.amazonaws.com',
+      port: 9000
+    };
 
-  var _initCallbacks = function() {
-    subscribe("add", function(obj) {
-      console.log("add", obj, obj.uuid, songs)
-      songs[obj.uuid] = obj;
-    });
-    subscribe("upvote", function(uuid) {
-      console.log("upvote", uuid)
-      songs[uuid].votes++;
-      songs[uuid].haveVoted = true;
-    });
-    subscribe("downvote", function(uuid) {
-      console.log("downvote", uuid)
-      songs[uuid].votes--;
-      songs[uuid].haveVoted = false;
-    });
-    subscribe("play", function(uuid) {
-      console.log("play", uuid);
-    });
-      
-    return this;
-  }
+    this._peer = new Peer(id, cfg);
+    console.log('connecting: ', this._peer);
 
-  var subscribe = function(type, cb) {
-    observers.push(function(msg) {
-      if(msg.action == type)
-        cb(msg.data)
-    });
-  }
+    this._peer.on('error', function(err) {
+      this._peer = new Peer(null, cfg);
 
-  return {
-    init: function () {
-      var urlArr = window.location.toString().split('/');
-      var id = urlArr[urlArr.length-1];
-      id = id.replace('.','-');
-  
-      var cfg = {
-        host: 'localhost',
-        port: 9000
-      };
-  
-      peer = new Peer(id, cfg);
-      peer.on('open', function(){
-        client = new Raft(peer, _handleRaftMessage, Raft.states.leader);
-        console.log(client.id, id);
-        client.join(id);
+      this._peer.on('open', function(){
+        this._client = new Raft(this._peer, this._handleRaftMessage.bind(this));
+        console.log(this._client.id, id);
+        this._client.join(id);
       }.bind(this));
-      peer.on('error', function(err) {
-        peer = new Peer(null, cfg);
-        peer.on('open', function(){
-          client = new Raft(peer, _handleRaftMessage)
-          console.log(client.id, id);
-          client.join(id);
-        });
-      });
-        
-      _initCallbacks()
-    },
-  
-    add: function (obj) {
-      _sendMessage('add', obj);
-    },
-  
-    upvote: function (uuid) {
-      _sendMessage("upvote", uuid);
-    },
-  
-    downvote: function (uuid) {
-      _sendMessage("downvote", uuid);
-    },
-  
-    play: function (uuid) {
-      _sendMessage("play", uuid);
+    }.bind(this));
+
+    this._peer.on('open', function(){
+      this._client = new Raft(this._peer, this._handleRaftMessage.bind(this),
+                              Raft.states.leader);
+      console.log(this._client.id, id);
+      this._client.join(id);
+    }.bind(this));
+
+    return this;
+  },
+
+  addObserver: function (aObserver) {
+    this._observers.push(aObserver);
+  },
+
+  fireObserver: function (aAction, aData) {
+    this._observers.forEach((aObserver) => aObserver.observe(aAction, aData));
+  },
+
+  add: function (aSong) {
+    this._client.send({
+      action: 'add',
+      obj: aSong
+    });
+  },
+
+  upvote: function (aSong) {
+    this._sendMessage("upvote", aSong.uuid);
+  },
+
+  downvote: function (aSong) {
+    this._sendMessage("downvote", aSong.uuid);
+  },
+
+  play: function (aSong) {
+    // XXX need to track who's the current player
+    this._sendMessage("play", aSong.uuid);
+  },
+
+  _sendMessage: function (aAction, aUUID) {
+    this._client.send({
+      action: aAction,
+      uuid: aUUID
+    });
+  },
+
+  _handleRaftMessage: function (data) {
+    if (data.action){
+      switch(data.action) {
+        case "add":
+          this.fireObserver(data.action, data.obj);
+          break;
+        case "upvote":
+          this.fireObserver(data.action, data.uuid);
+          break;
+        case "downvote":
+          this.fireObserver(data.action, data.uuid);
+          break;
+        case "play":
+          this.fireObserver(data.action, data.uuid);
+          break;
+        default:
+          console.warn("unknown action: " + data.action);
+          break;
+      }
     }
   }
-})();
+};
