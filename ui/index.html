@@ -62,25 +62,17 @@
       {{view Dprm.SongView valueBinding="nowPlaying"}}
     </div>
 
-    <section id="options">
-      <ul id="options-queue">
-        {{#each controller itemController="option"}}
-        <li class="option">
-          <div class="option-voting">
-            <button class="option-up" {{action "voteUp"}}>Up</button>
-            <button class="option-down" {{action "voteDown"}}>Down</button>
-            <p class="option-votes">{{votes}}</p>
-          </div>
+    <ul id="queue">
+      {{#each controller}}
+      <li class="option">
+        {{view Dprm.SongView}}
+      </li>
+      {{/each}}
+    </ul>
 
-          {{view Dprm.SongView valueBinding="song"}}
-        </li>
-        {{/each}}
-      </ul>
-
-      <footer>
-        <button>Add Song</button>
-      </footer>
-    </section>
+    <footer>
+      <button>Add Song</button>
+    </footer>
     </script>
 
     <script type="text/x-handlebars" data-template-name="room/add">
@@ -95,6 +87,12 @@
 
     <script type="text/x-handlebars" data-template-name="view-song">
     <div class="song">
+      <div class="option-voting">
+            <button class="option-up" {{action "voteUp"}}>Up</button>
+            <button class="option-down" {{action "voteDown"}}>Down</button>
+            <p class="option-votes">{{votes}}</p>
+          </div>
+
       <img src="{{albumCover}}" alt="{{albumName}}"/>
       <p class="name">{{name}}</p>
       <p class="song-albumname">From {{albumName}}</p>
