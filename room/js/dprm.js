@@ -42,7 +42,6 @@ function NextQueueCtrl($scope) {
 
 function NextSearchCtrl($scope, SongSearchService, YouTubeSearchService,
                         SoundCloudSearchService) {
-  console.log(YouTubeSearchService);
   $scope.queryText = "";
   $scope.results = [];
 
