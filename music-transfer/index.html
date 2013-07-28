@@ -1,0 +1,26 @@
+<html>
+<head>
+  <script src="http://code.jquery.com/jquery.min.js"></script>
+  <script src="http://cdn.peerjs.com/0/peer.js"></script>
+  <script type="text/javascript" src="dropzone.js"></script>
+  <script src="client.js"></script>
+  <link rel='stylesheet' href='dropzone-basic.css' type='text/css' />
+  <link rel='stylesheet' href='style.css' type='text/css' />
+</head>
+<body>
+  <form action="/foo" class="dropzone" id="uploader">
+    <div class="fallback">
+      <input name="file" type="file" multiple />
+    </div>
+  </form>
+  <div>
+    <input type='text' id='me'/>
+  </div>
+  <div>
+    <input type='text' id='them'/>
+  </div>
+  <button id='connect-btn'>Go!</button>
+  <audio id='audio' controls></audio>
+</body>
+</html>
+
