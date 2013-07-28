@@ -359,8 +359,10 @@ Raft.prototype.join = function(client_name, conn) {
     var self = this;
     conn.on('close', function() {
 	delete self.peers[conn.peer];
-	if(conn.peer == leader)
+	if(conn.peer == leader) {
 	    leader = null;
+	    resetElectionTimeout();
+	}
     })
 
     this.broadcast({type: "join", name: client_name})
