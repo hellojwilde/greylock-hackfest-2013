@@ -87,9 +87,8 @@ function NextUploadCtrl($scope, SongService) {
     var id = urlArr[urlArr.length-1];
     id = id.replace('.', '-');
     console.log('I am', Songs._client.id);
-    if (Object.keys(Songs._client.peers).length === 0 &&
-        Songs._client.state === Raft.states.leader) {
-      console.log('I am the sole user in the room');
+    if (id === Songs._client.id) {
+      console.log('Adding the song data to myself');
       songDataCollection[uuid] = aFile;
     } else {
       console.log('Should send file to', id);
