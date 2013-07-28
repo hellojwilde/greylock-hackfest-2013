@@ -1,10 +1,9 @@
 var Songs = {
-  _songs: {},
   _observers: [],
   _peer: null,
   _client: null,
 
-
+  songs: {},
 
   init: function () {
     var urlArr = window.location.toString().split('/');
@@ -84,14 +83,17 @@ var Songs = {
       switch(data.action){
         case "add":
           console.log("adding");
+          this.songs[data.obj.uuid] = data.obj;
           this.fireObserver(data.action, data.obj);
           break;
         case "upvote":
           console.log("upvoting");
+          this.songs[data.uuid].votes++;
           this.fireObserver(data.action, data.uuid);
           break;
         case "downvote":
           console.log("downvoting");
+          this.songs[data.uuid].votes--;
           this.fireObserver(data.action, data.uuid);
           break;
         case "play":
