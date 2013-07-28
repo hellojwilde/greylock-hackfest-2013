@@ -1,17 +1,14 @@
 var dprm = angular.module('dprm', [], function ($provide) {
   /* Song storage backends. */
-  $provide.factory('SongService', () => Songs.init());
+  $provide.factory('SongService', Songs.init.bind(Songs));
 
   /* Individual search backends. */
-  $provide.factory('SongSearchService', ['SongService', SongSearch.init]);
-  $provide.factory('YouTubeSearchService', YouTubeSearch.init);
-  $provide.factory('SoundCloudSearchService', SoundCloudSearch.init);
-
-  /* Search backend that interleaves. */
-  Search.init.$inject = ['SongSearchService', 'YouTubeSearchService',
-                         'SoundCloudSearchService'];
-
-  $provide.factory('SearchService', Search.init);
+  $provide.factory('SongSearchService',
+                   ['SongService', SongSearch.init.bind(SongSearch)]);
+  $provide.factory('YouTubeSearchService',
+                   YouTubeSearch.init.bind(YouTubeSearch));
+  $provide.factory('SoundCloudSearchService',
+                   SoundCloudSearch.init.bind(SoundCloudSearch));
 });
 
 /**
@@ -32,7 +29,7 @@ function NowCtrl($scope) {
   $scope.song = null;
 }
 
-function NextCtrl($scope) {
+function NextCtrl($scope, SongService) {
   $scope.isSearching = false;
 }
 
@@ -43,30 +40,33 @@ function NextQueueCtrl($scope) {
   };
 }
 
-function NextSearchCtrl($scope) {
+function NextSearchCtrl($scope, SongSearchService, YouTubeSearchService,
+                        SoundCloudSearchService) {
   $scope.queryText = "";
-  $scope.queries = [];
   $scope.results = [];
 
   $scope.editSearch = function () {
-    $scope.resetSearch();
+    $scope.results.forEach(() => $scope.results.pop());
 
     if ($scope.queryText.length > 0) {
-      $scope.isSearching = true;
+      var query = $scope.queryText;
+      var queries = [SongSearchService.search(query),
+                     YouTubeSearchService.search(query),
+                     SoundCloudSearchService.search(query)];
 
-      // XXX kick off the new search
+      when.any(queries, function (aResultSet) {
+        aResultSet.forEach(function (aResult) {
+          $scope.results.push(aResult);
+        });
+      });
+
+      $scope.isSearching = true;
     } else {
       $scope.isSearching = false;
     }
   };
 
-  $scope.resetSearch = function() {
-    $scope.queries.forEach((aQuery) => aQuery.cancel());
-    $scope.results = [];
-  }
-
   $scope.endSearch = function () {
-    $scope.resetSearch();
     $scope.isSearching = false;
   };
 }
@@ -77,8 +77,36 @@ Dropzone.options.uploader = {
   autoProcessQueue: false
 };
 
+// some mock values
+var Messager = {
+  getPlayerId: function() { return '{{player}}' },
+  getId: function() { return 1;},
+  getPeer: function() {
+    if (!Messager._peer) {
+      Messager._peer = new Peer($('#me').val(), {host: 'localhost', port: 9000});
+    }
+    return Messager._peer;
+  },
+};
+
 function NextUploadCtrl($scope) {
-  var uploader = Dropzone.instances[0];
-  if (!uploader) throw new Error('wat');
-  uploader.files.forEach(function(f) { f.status = Dropzone.SUCCESS; });
+  $scope.upload = function () {
+    var uploader = Dropzone.instances[0];
+    if (!uploader) throw new Error('wat');
+
+    var peer = Messager.getPeer();
+    if (Messager.getPlayerId() != Messager.getId()) {
+      var conn = peer.connect(Messager.getPlayerId());
+      conn.on('open', function() {
+        uploader.files.forEach(function(f) {
+          console.log('trying to send', f)
+          conn.send(f);
+          f.status = Dropzone.SUCCESS;
+        });
+      });
+      conn.on('error', function(err) {
+        console.error(err);
+      });
+    }
+  }
 }
