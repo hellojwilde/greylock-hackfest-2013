@@ -11,6 +11,8 @@ var dprm = angular.module('dprm', [], function ($provide) {
                    SoundCloudSearch.init.bind(SoundCloudSearch));
 });
 
+$('#audio').hide();
+
 /**
  * schema for a song:
  * {
@@ -29,9 +31,12 @@ function NowCtrl($scope, SongService) {
   $scope.$parent.songPlaying = null;
 }
 
+var theSongs;
+
 function NextQueueCtrl($scope, SongService) {
   $scope.$parent.songPlaying = null;
   $scope.songs = [];
+  theSongs = $scope.songs; // XXX let this escape the fn
   $scope.songsById = {}; // index for $scope.songs
 
   SongService.addObserver(function (aAction, aData) {
@@ -56,6 +61,7 @@ function NextQueueCtrl($scope, SongService) {
   });
 }
 
+var songDataCollection = {};
 Dropzone.autoDiscover = false;
 function NextUploadCtrl($scope, SongService) {
   var dropped = {};
@@ -76,11 +82,30 @@ function NextUploadCtrl($scope, SongService) {
       name: aFile.name,
       votes: 1
     });
+
+    var urlArr = window.location.toString().split('/');
+    var id = urlArr[urlArr.length-1];
+    id = id.replace('.', '-');
+    console.log('I am', Songs._client.id);
+    if (Object.keys(Songs._client.peers).length === 0 &&
+        Songs._client.state === Raft.states.leader) {
+      console.log('I am the sole user in the room');
+      songDataCollection[uuid] = aFile;
+    } else {
+      console.log('Should send file to', id);
+      var conn = Songs._client.peers[id].conn;
+      Songs._client.sendto(id,{
+        type: "songData",
+        uuid: uuid,
+        data: aFile
+      });
+    }
   });
 
   SongService.addObserver(function (aAction, aData) {
     switch (aAction) {
       case "add":
+        console.log('observed add');
         var file = dropped[aData.uuid];
         if(file) {
           $scope.dropzone.removeFile(file);
@@ -89,3 +114,20 @@ function NextUploadCtrl($scope, SongService) {
     }
   });
 }
+
+function addSongData(uuid, data) {
+  console.log('adding song data')
+  songDataCollection[uuid] = new Blob([data]);
+}
+
+function play(uuid) {
+  console.log('trying to play', uuid)
+}
+
+$('#play').click(function() {
+  theSongs.sort(function(a,b) { return b.votes > a.votes; });
+  var aud = $('#audio');
+  aud.attr('src', URL.createObjectURL(songDataCollection[theSongs[0].uuid]));
+  aud.show();
+  aud[0].play();
+});
