@@ -26,20 +26,18 @@ var dprm = angular.module('dprm', [], function ($provide) {
  */
 
 function NowCtrl($scope, SongService) {
-  //get/send a playing update
-  $scope.playing = {};
-  $scope.playing.name = "Nothing's playing!";
+  $scope.$parent.songPlaying = null;
 }
 
 function NextQueueCtrl($scope, SongService) {
-  $scope.songPlaying = null;
+  $scope.$parent.songPlaying = null;
   $scope.songs = [];
   $scope.songsById = {}; // index for $scope.songs
 
   SongService.addObserver(function (aAction, aData) {
     switch (aAction) {
       case "play":
-        $scope.songPlaying = $scope.songsById[aData];
+        $scope.$parent.songPlaying = $scope.songsById[aData];
         break;
       case "upvote":
         $scope.songsById[aData].votes++;
@@ -62,23 +60,21 @@ function NextUploadCtrl($scope, SongService) {
   $scope.dropzone = new Dropzone("#uploader");
   $scope.dropzone.on("addedfile", function (aFile) {
     var uuid = aFile.name;
+    aFile.status = Dropzone.SUCCESS;
+    dropped[uuid] = aFile;
 
     SongService.add({
       uuid: uuid,
       name: aFile.name,
       votes: 1
     });
-
-    dropped[uuid] = aFile;
-    aFile.status = Dropzone.SUCCESS;
   });
 
   SongService.addObserver(function (aAction, aData) {
     switch (aAction) {
       case "add":
         var file = dropped[aData.uuid];
-        dropzone.removeFile(file);
-        delete dropped[aData.uuid];
+        $scope.dropzone.removeFile(file);
         break;
     }
   });

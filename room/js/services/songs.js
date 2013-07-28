@@ -41,7 +41,7 @@ var Songs = {
   },
 
   add: function (aSong) {
-    this._sendMessage('add', aSong)
+    this._sendMessage('add', aSong);
   },
 
   upvote: function (aSong) {
@@ -57,10 +57,10 @@ var Songs = {
     this._sendMessage("play", aSong.uuid);
   },
 
-  _sendMessage: function (aAction, data) {
+  _sendMessage: function (aAction, aData) {
     this._client.send({
       action: aAction,
-      data: data
+      data: aData
     });
   },
 

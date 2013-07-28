@@ -24,7 +24,7 @@ function Raft(peer, cb, initial_state) {
     self.currentTerm = 0;
     self.log = [];
     self.votedFor;
-    self.numVotes = 0;
+    self.votes = {};
     self.state = initial_state;
     self.lastIndex = 0;
     self.commitIndex = 0;
@@ -109,7 +109,8 @@ function Raft(peer, cb, initial_state) {
 	console.log("begin election")
 
 	self.currentTerm++;
-	self.numVotes = 1;
+	self.votes = {}
+	self.votes[self.id] = true
 	self.state = Raft.states.candidate;
 	self.votedFor = self.id;
 	resetElectionTimeout();
@@ -142,8 +143,9 @@ function Raft(peer, cb, initial_state) {
     }
 
     function handleVoteAck(msg) {
-	self.numVotes++;
-	if(self.numVotes >= Math.floor(len(self.peers)/2) + 1) {
+	self.votes[msg.from] = true;
+	console.log(self.votes)
+	if(isMajority(len(self.votes))) {
 	    console.log("won election")
 	    stopElectionTimeout();
 	    self.state = Raft.states.leader;
@@ -176,7 +178,7 @@ function Raft(peer, cb, initial_state) {
     }
 
     function isMajority(i) {
-	return i >= Math.floor(len(self.peers)/2) + 1
+	return i >= Math.floor((len(self.peers) + 1)/2) + 1
     }
 
     function handleCallback(res) {
@@ -278,7 +280,7 @@ function Raft(peer, cb, initial_state) {
 	    self.state = Raft.states.follower;
 	    resetElectionTimeout();
 	    self.votedFor = null;
-	    self.numVotes = 0;
+	    self.votes = [];
 	}
     }
 
@@ -301,8 +303,8 @@ function Raft(peer, cb, initial_state) {
 	    checkTerm(msg);
 	    break;
 	case "appendEntries":
-	    self.leader = msg.from;
 	    checkTerm(msg);
+	    self.leader = msg.from;
 	    handleAppendEntries(msg);
 	    break;
 	case "commit":
