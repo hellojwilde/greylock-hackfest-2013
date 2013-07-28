@@ -13,11 +13,18 @@ h3 {
     color: #444;
 }
 
+hr {
+    border-color: #222;
+    margin-bottom:5%;
+    margin-top: 5%;
+}
+
 input[type=text] {
     text-align: center;
     font-size: 200%;
 }
 
 #join {
+    margin-top:-5%;
     font-size: 150%;
 }

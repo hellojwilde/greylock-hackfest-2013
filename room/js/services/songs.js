@@ -9,28 +9,24 @@ var Songs = {
     id = id.replace('.','-');
 
     var cfg = {
-      host: 'ec2-54-215-180-78.us-west-1.compute.amazonaws.com',
+      host: 'localhost',
       port: 9000
     };
 
     this._peer = new Peer(id, cfg);
-    console.log('connecting: ', this._peer);
-
+    this._peer.on('open', function(){
+      this._client = new Raft(this._peer,
+			      this._handleRaftMessage.bind(this),
+                              Raft.states.leader);
+      console.log(id);
+    }.bind(this));
     this._peer.on('error', function(err) {
       this._peer = new Peer(null, cfg);
-
       this._peer.on('open', function(){
         this._client = new Raft(this._peer, this._handleRaftMessage.bind(this));
         console.log(this._client.id, id);
         this._client.join(id);
       }.bind(this));
-    }.bind(this));
-
-    this._peer.on('open', function(){
-      this._client = new Raft(this._peer, this._handleRaftMessage.bind(this),
-                              Raft.states.leader);
-      console.log(this._client.id, id);
-      this._client.join(id);
     }.bind(this));
 
     return this;
@@ -45,10 +41,7 @@ var Songs = {
   },
 
   add: function (aSong) {
-    this._client.send({
-      action: 'add',
-      obj: aSong
-    });
+    this._sendMessage('add', aSong)
   },
 
   upvote: function (aSong) {
@@ -64,32 +57,14 @@ var Songs = {
     this._sendMessage("play", aSong.uuid);
   },
 
-  _sendMessage: function (aAction, aUUID) {
+  _sendMessage: function (aAction, data) {
     this._client.send({
       action: aAction,
-      uuid: aUUID
+      data: data
     });
   },
 
-  _handleRaftMessage: function (data) {
-    if (data.action){
-      switch(data.action) {
-        case "add":
-          this.fireObserver(data.action, data.obj);
-          break;
-        case "upvote":
-          this.fireObserver(data.action, data.uuid);
-          break;
-        case "downvote":
-          this.fireObserver(data.action, data.uuid);
-          break;
-        case "play":
-          this.fireObserver(data.action, data.uuid);
-          break;
-        default:
-          console.warn("unknown action: " + data.action);
-          break;
-      }
-    }
+  _handleRaftMessage: function (msg) {
+    this.fireObserver(msg.action, msg.data);
   }
 };
