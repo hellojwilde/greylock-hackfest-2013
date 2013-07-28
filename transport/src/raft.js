@@ -27,13 +27,12 @@ function Raft(peer, cb) {
 
     peer.on('open', function() {
 	self.id = peer.id;
+	resetElectionTimeout();
     })
     
     peer.on('connection', function(conn) {
 	self.join(conn.peer, conn)
     })
-
-    resetElectionTimeout();
 
     function send(name, msg) {
 	msg.term = self.currentTerm
