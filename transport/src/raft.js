@@ -9,19 +9,13 @@ function randBetween(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function Peer(name, call) {
-    this.nextId = -1;
-    this.name = name;
-    this.call = call;
-}
-
-function raft(rtc, self, cb) {
+function raft(peer, self, cb) {
     var states = {
 	leader: 1,
 	follower: 2,
 	candidate: 3
     }
-    
+
     var log = [];
     var votedFor;
     var currentTerm = 0;
@@ -31,17 +25,40 @@ function raft(rtc, self, cb) {
     var lastIndex = 0;
     var commitIndex = 0;
     var peers = {};
-    
-    var callbacks = {};
+
     var baseElectionTimeout = 1000;
     var electionTimer;
+
+
+    peer.on('connection', function(conn) {
+	join(conn.peer, conn)
+    })
+    
     resetElectionTimeout();
+
+    function join(client_name, conn) {
+	if(peers[client_name])
+	    return
+	
+	if(!conn)
+	    conn = peer.connect(client_name)
+	conn.on('data', receive);
+
+	broadcast({type: "join", name: client_name})
+	
+	peers[client_name] = {
+	    nextId: -1,
+	    name: client_name,
+	    conn: conn
+	}
+    }
     
     function send(name, msg) {
 	msg.term = currentTerm
 	msg.from = self
 	var peer = peers[name]
-	peer.call.chat(JSON.stringify(msg))
+	if(peer.conn.open)
+	    peer.conn.send(JSON.stringify(msg))
     }
 
     function broadcast(msg) {
@@ -91,7 +108,6 @@ function raft(rtc, self, cb) {
     
     function handleVoteRequest(msg) {
 	if(votedFor == null) {
-	    console.log("handle vote request for", msg, currentTerm);
 	    votedFor = msg.from;
 	    send(msg.from, {
 		type: "voteAck"
@@ -118,14 +134,6 @@ function raft(rtc, self, cb) {
 		reason: "prevLogIndex",
 		msg: msg
 	    })
-	  //} else if(msg.prevLogIndex >= 0 && log[msg.prevLogIndex].msg != msg.prevLogEntry) {
-	  //   console.error("error handling msg: mismatch prevLogEntry", msg);
-	  //   send(msg.from, {
-	  // 	type: "res",
-	  // 	status: "error",
-	  // 	reason: "prevLogEntry",
-	  // 	msg: msg
-	  //   })
  	} else {
 	    for(var idx in msg.entries) {
 		var entry = msg.entries[idx];
@@ -207,15 +215,6 @@ function raft(rtc, self, cb) {
 	lastIndex++;
     }
 
-    function join(client_name, call) {
-	if(!call)
-	    call = rtc.call(client_name)
-	
-	var peer = new Peer(client_name, call)
-	peers[client_name] = peer
-	peer.call.on("chat", receive)
-    }
-
     function checkTerm(msg) {
 	if(msg.term < currentTerm) {
 	    console.log("reject old message")
@@ -235,7 +234,6 @@ function raft(rtc, self, cb) {
 
 	if(!peers[msg.from]) {
 	    console.log("unknown peer " + msg.from)
-	    join(msg.from)
 	    return;
 	}
 	
@@ -259,6 +257,9 @@ function raft(rtc, self, cb) {
 	    break;
 	case "res":
 	    handleCallback(msg);
+	    break;
+	case "join":
+	    join(msg.name)
 	    break;
 	default:
 	    console.error("unknown message type: " + msg.type);
