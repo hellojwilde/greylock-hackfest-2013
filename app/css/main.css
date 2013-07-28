@@ -2,11 +2,13 @@ body {
     background-color:#ddd;
     color:#666;
     text-align:center;
-    margin-top:10%;
+    margin-top:5%;
 }
 
 h1 {
      color: #222;
+     font-weight: lighter;
+     font-size: 450%;
 }
 
 h3 {
