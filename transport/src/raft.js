@@ -12,7 +12,6 @@ function randBetween(min, max) {
 function Raft(peer, cb) {
     var self = this;
     self.peer = peer;
-    self.id = peer.id;
     self.currentTerm = 0;
     self.log = [];
     self.votedFor;
@@ -26,6 +25,10 @@ function Raft(peer, cb) {
     var baseElectionTimeout = 1000;
     var electionTimer;
 
+    peer.on('open', function() {
+	self.id = peer.id;
+    })
+    
     peer.on('connection', function(conn) {
 	self.join(conn.peer, conn)
     })
@@ -232,7 +235,7 @@ function Raft(peer, cb) {
 	msg = JSON.parse(str);
 
 	if(!self.peers[msg.from]) {
-	    console.log("unknown peer " + msg.from)
+	    console.log("unknown peer " + msg.from, msg)
 	    return;
 	}
 
