@@ -6,7 +6,11 @@
 
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.js"></script>
   <script src="http://connect.soundcloud.com/sdk.js"></script>
+<<<<<<< HEAD
 
+=======
+  <script src="http://cdn.peerjs.com/0/peer.min.js"></script>
+>>>>>>> 847c43c70134578d9f0d6efb5fe5111b4c73c587
   <link rel='stylesheet' href='css/dropzone-basic.css'/>
   <link rel='stylesheet' href='css/room.css'/>
 </head>
@@ -46,8 +50,7 @@
       </div>
     </div>
 
-    <div id="upload" ng-controller="NextUploadCtrl">
-      <!-- form+form action is necessary for dropzone auto-detection-->
+     <div id="upload" ng-controller="NextUploadCtrl">
       <form action="/foo" class="dropzone" id="uploader">
         <div class="fallback">
           <input name="file" type="file" multiple />
@@ -61,6 +64,7 @@
   <script src="js/dropzone.js"></script>
   <script src="js/services/search.js"></script>
   <script src="js/services/songs.js"></script>
+  <script src="../transport/src/raft.js"></script>
   <script src="js/dprm.js"></script>
 
   <script src="js/components/song.js"></script>
