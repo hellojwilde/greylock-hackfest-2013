@@ -15,10 +15,10 @@
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/touch/apple-touch-icon-72x72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="img/touch/apple-touch-icon-57x57-precomposed.png">
     <link rel="shortcut icon" href="img/touch/apple-touch-icon.png">
-    
+
     <link rel="stylesheet" href="css/main.css">
   </head>
-  <body>
+  <body onload="loaded()">
     <h1 name='title'>
       DPRM
     <h1>
@@ -32,16 +32,13 @@
     </div>
     <hr>
     <div class="room-form">
-      <input type="text" name="room" value="random value">
+      <input type="text" id="room" value="random value">
       <div class="join-create-room">
         <button type="button" onclick="joinRoom()">Join a room</button>
         <button type="button" onclick="createRoom()">Create a room</button>
       </div>
     </div>
 
- 
-
-    <script src="js/zepto.min.js"></script>
     <script src="js/index.js"></script>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
