@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app>
+<html lang="en" ng-app="dprm">
 <head>
   <meta charset="utf-8"/>
   <title>Room</title>
@@ -12,46 +12,21 @@
   </section>
 
   <section id="next" ng-controller="NextCtrl">
-    <header>
-      <input ng-model="search" ng-change="modifySearch()"/>
-      <button ng-show="isSearching">Cancel</button>
-    </header>
 
     <ul id="queue" ng-hide="isSearching">
       <li ng-repeat="song in queue()">
-        <img src="{{song.thumbnail}}" alt="{{song.name}}"/>
-        <p class="name">{{song.name}}</p>
-
-        <div class="voting">
-          <div class="voting-buttons" ng-hide="{{song.haveVoted}}">
-            <button class="voting-up" ng-click="upvote({{song.uuid}})">Up</button>
-            <button class="voting-down" ng-click="downvote({{song.uuid}})">Down</button>
-          </div>
-          <p class="votes">{{song.votes}}</p>
-        </div>
       </li>
     </ul>
 
     <ul id="results" ng-show="isSearching"
       <li ng-repeat="item in results">
-        <img src="{{song.thumbnail}}" alt="{{song.name}}"/>
-        <p class="name">{{song.name}}</p>
 
-        <div class="voting" ng-show="{{song.isQueued}}">
-          <div class="voting-buttons" ng-hide="{{song.haveVoted}}">
-            <button class="voting-up">Up</button>
-            <button class="voting-down">Down</button>
-          </div>
-          <p class="votes">{{song.votes}}</p>
-        </div>
-
-        <div class="queuing" ng-hide="{{song.isQueued}}">
-          <button class="queue" ng-click="enqueue({{song}})">Add to Queue</button>
-        </div>
       </li>
     </ul>
 
-    <footer><button ng-click="upload()">Upload</button></footer>
+    <footer>
+      <button ng-click="upload()">Upload</button>
+    </footer>
   </section>
 
   <script src="js/room.js"></script>
