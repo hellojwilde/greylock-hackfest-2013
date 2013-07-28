@@ -73,6 +73,14 @@ function NextSearchCtrl($scope) {
   };
 }
 
+// Dropzone
+
+Dropzone.options.uploader = {
+  autoProcessQueue: false
+};
+
 function NextUploadCtrl($scope) {
-  // XXX upload stuff here
+  var uploader = Dropzone.instances[0];
+  if (!uploader) throw new Error('wat');
+  uploader.files.forEach(function(f) { f.status = Dropzone.SUCCESS; });
 }

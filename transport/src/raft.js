@@ -25,9 +25,10 @@ function Raft(peer, cb) {
     var baseElectionTimeout = 1000;
     var electionTimer;
 
-    peer.on('open', function() {
-	self.id = peer.id;
-	resetElectionTimeout();
+    self.id = peer.id;
+    resetElectionTimeout();
+    peer.on('open', function(id) {
+	self.id = id;
     })
     
     peer.on('connection', function(conn) {
