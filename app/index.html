@@ -19,28 +19,28 @@
     <link rel="stylesheet" href="../assets/foundation/css/foundation.css">
     <link rel="stylesheet" href="css/main.css">
   </head>
-  <body onload="loaded()">
+  <body onload="Index.handleLoad();">
     <div id='intro' class="row">
       <div class="large-8 large-centered columns">
         <h1 name='title'>
           pearjam
         <h1>
         <h3 class='subtitle'>
-          Vote on and enjoy the best songs your friends come up with!  
+          Vote on and enjoy the best songs your friends come up with!
         </h3>
         <div class='explaination'>
           <p>
-            With PearJam, you and your friends can have a playlist you all vote on.  Just join a room; give your friends the URL; collaborate; and, enjoy the music!
+            With PearJam, you and your friends can have a playlist you all vote on.  Just join a room, give your friends the URL, collaborate, and enjoy the music!
           </p>
           <p>Everyone gets a copy of music queue and everyone can add to it; but the music only plays on the creator's speakers.  Perfect for parties where you have just one computer hooked up to a speaker but everyone gives input on what to hear next!</p>
           <p>Note that this is all P2P using a new technology called <a href="http://www.webrtc.org/">WebRTC</a>.  Our servers don't see what happens in your playlist!</p>
         </div>
         <hr>
-        <div class="large-7 large-centered columns">
+        <div class="large-10 large-centered columns">
           <div class="room-form">
-            <input type="text" id="room" value="random value">
+            <input type="text" name="room" id="room" value="random value">
             <div class="join-create-room">
-              <button type="button" id="join" onclick="joinRoom()">Join a room</button>
+              <button type="button" id="join" onclick="Index.handleJoin();">Join your room!</button>
             </div>
           </div>
         </div>
