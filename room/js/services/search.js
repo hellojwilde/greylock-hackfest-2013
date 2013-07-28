@@ -1,11 +1,16 @@
 var SongSearch = {
-  init: function () {
-
+  _SongService: null,
+  init: function (SongService) {
+    this._SongService = SongService;
     return this;
   },
 
   search: function (aQueryString) {
+    var deferred = when.defer();
 
+
+
+    return deferred.promise;
   }
 };
 

@@ -1,11 +1,14 @@
 var dprm = angular.module('dprm', [], function ($provide) {
   /* Song storage backends. */
-  $provide.factory('SongService', () => Songs.init());
+  $provide.factory('SongService', Songs.init.bind(Songs));
 
   /* Individual search backends. */
-  $provide.factory('SongSearchService', SongSearch.init);
-  $provide.factory('YouTubeSearchService', YouTubeSearch.init);
-  $provide.factory('SoundCloudSearchService', SoundCloudSearch.init);
+  $provide.factory('SongSearchService',
+                   ['SongService', SongSearch.init.bind(SongSearch)]);
+  $provide.factory('YouTubeSearchService',
+                   YouTubeSearch.init.bind(YouTubeSearch));
+  $provide.factory('SoundCloudSearchService',
+                   SoundCloudSearch.init.bind(SoundCloudSearch));
 });
 
 /**
@@ -26,7 +29,7 @@ function NowCtrl($scope) {
   $scope.song = null;
 }
 
-function NextCtrl($scope) {
+function NextCtrl($scope, SongService) {
   $scope.isSearching = false;
 }
 
@@ -37,7 +40,9 @@ function NextQueueCtrl($scope) {
   };
 }
 
-function NextSearchCtrl($scope) {
+function NextSearchCtrl($scope, SongSearchService, YouTubeSearchService,
+                        SoundCloudSearchService) {
+  console.log(YouTubeSearchService);
   $scope.queryText = "";
   $scope.results = [];
 
@@ -46,12 +51,12 @@ function NextSearchCtrl($scope) {
 
     if ($scope.queryText.length > 0) {
       var query = $scope.queryText;
-      var queries =/* [SongSearchService.search(query),
+      var queries = [SongSearchService.search(query),
                      YouTubeSearchService.search(query),
-                     SoundCloudSearchService.search(query)]*/[];
+                     SoundCloudSearchService.search(query)];
       var uniqueUUIDs = {};
 
-    /*  queries.any(function (aResultSet) {
+      when.any(queries, function (aResultSet) {
         aResultSet.forEach(function (aResult) {
           if (uniqueUUIDs[aResult.uuid]) {
             return;
@@ -60,7 +65,7 @@ function NextSearchCtrl($scope) {
           uniqueUUIDs[aResult.uuid] = true;
           $scope.results.push(aResult);
         });
-      });*/
+      });
 
       $scope.isSearching = true;
     } else {

@@ -3,7 +3,6 @@ var Songs = {
 
   init: function () {
     // XXX init code here
-
     return this;
   },
 
@@ -24,6 +23,10 @@ var Songs = {
   },
 
   play: function () {
+
+  },
+
+  filter: function () {
 
   },
 
