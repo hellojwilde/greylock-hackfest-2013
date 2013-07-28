@@ -64,14 +64,14 @@
   0% { background: #333; }
   20% { background: #183846; }
   40% { background: #0D1E25; }
-  60% { background: #000000; }
+  60% { background: #235366; }
   80% { background: #0D1E25; }
   100% { background: #333; }
 }
 
 #now[playing="true"] {
   animation-name: pulse;
-  animation-duration: 5s;
+  animation-duration: 4s;
   animation-iteration-count: infinite;
 }
 
